@@ -1,9 +1,7 @@
 package logistics.facilityservice;
 
-import logistics.utilities.exceptions.ItemNotFoundInActiveInventoryException;
-import logistics.utilities.exceptions.NegativeOrZeroParameterException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
+import logistics.inventoryservice.Inventory;
+import logistics.scheduleservice.Schedule;
 
 /**
  * This class represents a Facility Factory, which handles object creation 
@@ -13,13 +11,10 @@ import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
  * @author Uchenna F. Okoye
  */
 
-public interface Facility
-{
+public interface Facility extends Schedule, Inventory {
     String getName();
     Integer getRate();
     Double getCost();
-    String getInventoryOutput();
-    void addInventoryItem(String itemId, int quantity) throws NullParameterException, NegativeOrZeroParameterException;
-    Integer getQuantity(String itemId);
-    void reduceFromInventory(String itemId, int quantity) throws NullParameterException, QuantityExceedsAvailabilityException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException;
+    String getFacilityOutput();
+
 }

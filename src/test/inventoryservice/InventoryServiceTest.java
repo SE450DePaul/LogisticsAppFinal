@@ -1,7 +1,7 @@
 package test.inventoryservice;
 
-import logistics.inventoryservice.InventoryService;
-import logistics.inventoryservice.dtos.FacilityWithItemDTO;
+import logistics.facilityservice.FacilityService;
+import logistics.facilityservice.dtos.FacilityWithItemDTO;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,11 +48,11 @@ public class InventoryServiceTest {
         });
     }
 
-    static InventoryService instance = null;
+    static FacilityService instance = null;
 
     @BeforeClass
     public static void setup() {
-        instance = InventoryService.getInstance();
+        instance = FacilityService.getInstance();
     }
 
     @Test

@@ -1,4 +1,4 @@
-package logistics.facilityservice;
+package logistics.facilityservice.dtos;
 
 /**
  * This class represents a Facility Data Transfer Object that is 

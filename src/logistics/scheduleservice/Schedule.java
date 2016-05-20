@@ -6,7 +6,7 @@ import logistics.utilities.exceptions.NegativeOrZeroParameterException;
  * This is a Schedule Interface which provides common behaviors 
  * every Facility Schedule should be able to perform.
  * 
- * @author David Olorundare
+ * @authors David Olorundare and Uchenna F. Okoye
  */
 public interface Schedule {
 

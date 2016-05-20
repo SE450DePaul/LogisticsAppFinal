@@ -2,6 +2,7 @@ package logistics.utilities.loader.implementation;
 
 import logistics.facilityservice.Facility;
 import logistics.facilityservice.FacilityFactory;
+import logistics.utilities.exceptions.IllegalParameterException;
 import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.exceptions.NullParameterException;
 import logistics.utilities.loader.interfaces.FacilityLoader;
@@ -81,19 +82,15 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	                Facility facility = FacilityFactory.build(name, rate, cost);
 					facilities.add(facility);
 	            }
-	        } 
-	        catch (ParserConfigurationException e) 
-	        {
+	        } catch (ParserConfigurationException e) {
 	            e.printStackTrace();
-	        } 
-	        catch (SAXException e) 
-	        {
+	        } catch (SAXException e) {
 	            e.printStackTrace();
-	        } 
-	        catch (IOException e) 
-	        {
+	        } catch (IOException e) {
 	            e.printStackTrace();
 	        } catch (NullParameterException e) {
+				e.printStackTrace();
+			} catch (IllegalParameterException e) {
 				e.printStackTrace();
 			}
 

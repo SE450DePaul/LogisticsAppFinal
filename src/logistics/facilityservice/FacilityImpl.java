@@ -8,10 +8,11 @@ package logistics.facilityservice;
 
 import logistics.inventoryservice.Inventory;
 import logistics.inventoryservice.InventoryFactory;
-import logistics.utilities.exceptions.ItemNotFoundInActiveInventoryException;
-import logistics.utilities.exceptions.NegativeOrZeroParameterException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
+import logistics.scheduleservice.Schedule;
+import logistics.scheduleservice.ScheduleFactory;
+import logistics.utilities.exceptions.*;
+
+import java.util.Iterator;
 
 public class FacilityImpl implements Facility
 {
@@ -19,14 +20,15 @@ public class FacilityImpl implements Facility
     private Integer rate;
     private Double cost;
 	private Inventory inventory;
+	private Schedule schedule;
 
-    public FacilityImpl(String name, Integer rate, Double cost) throws NullParameterException {
+    public FacilityImpl(String name, Integer rate, Double cost) throws IllegalParameterException {
         setName(name);
         setRate(rate);
         setCost(cost);
 		inventory = InventoryFactory.build(name);
+		schedule = ScheduleFactory.build(name, rate);
     }
-
 
 	public String getName() {
 		return name;
@@ -40,6 +42,8 @@ public class FacilityImpl implements Facility
 		return cost;
 	}
 
+
+	/* Inventory */
 	@Override
 	public String getInventoryOutput() {
 		return inventory.getInventoryOutput();
@@ -51,18 +55,50 @@ public class FacilityImpl implements Facility
 	}
 
 	@Override
+	public Iterator<String> getInventoryItems() {
+		return inventory.getInventoryItems();
+	}
+
+	@Override
 	public Integer getQuantity(String itemId) {
 		return inventory.getQuantity(itemId);
+	}
+
+	@Override
+	public String getFacilityName() {
+		return inventory.getFacilityName();
 	}
 
 	@Override
 	public void reduceFromInventory(String itemId, int quantity) throws NullParameterException, QuantityExceedsAvailabilityException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException {
 		inventory.reduceFromInventory(itemId, quantity);
 	}
+
+	/* End Inventory */
+
+	/* Schedule */
+
+	@Override
+	public int bookFacility(int processItemNum, int startDay) throws NegativeOrZeroParameterException {
+		return schedule.bookFacility(processItemNum, startDay);
+	}
+
+	@Override
+	public String getScheduleOutput() {
+		return schedule.getScheduleOutput();
+	}
+
+	@Override
+	public int getProcessDaysNeeded(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
+		return schedule.getProcessDaysNeeded(noOfItemsToProcess, startDay);
+	}
+
+	/* End Schedule */
+
 	/*
 	 * Helper method used to assembly a Facility's Name, Rate, and Cost, for output.
 	 */
-	public String toStr() {
+	public String getFacilityOutput() {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append(name);
 		stringBuffer.append("\n");
@@ -140,4 +176,6 @@ public class FacilityImpl implements Facility
 		}
 		return str.toString();
 	}
+
+
 }

@@ -1,12 +1,10 @@
 package logistics.orderservice;
 
 import logistics.facilityservice.FacilityService;
-import logistics.inventoryservice.InventoryService;
-import logistics.inventoryservice.dtos.FacilityWithItemDTO;
+import logistics.facilityservice.dtos.FacilityWithItemDTO;
 import logistics.networkservice.NetworkService;
 import logistics.networkservice.travelguide.TravelGuideDTO;
 import logistics.orderservice.facilityrecord.FacilityRecordDTO;
-import logistics.scheduleservice.ScheduleService;
 import logistics.utilities.exceptions.*;
 
 import java.util.Collection;
@@ -80,6 +78,8 @@ public class OrderProcessorImpl implements OrderProcessor {
             e.printStackTrace();
         } catch (IllegalParameterException e) {
             e.printStackTrace();
+        } catch (FacilityNotFoundException e) {
+            e.printStackTrace();
         }
 
         return facilityRecordDTO;
@@ -107,14 +107,16 @@ public class OrderProcessorImpl implements OrderProcessor {
                 e.printStackTrace();
             } catch (NegativeOrZeroParameterException e) {
                 e.printStackTrace();
+            } catch (FacilityNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void processFromFacility(FacilityRecordDTO facilityRecordDTO, int quantity) throws QuantityExceedsAvailabilityException, NullParameterException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException {
+    private void processFromFacility(FacilityRecordDTO facilityRecordDTO, int quantity) throws QuantityExceedsAvailabilityException, NullParameterException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException, FacilityNotFoundException {
         String facility = facilityRecordDTO.source;
-        InventoryService.getInstance().reduceFromInventory(facility, itemId, quantity);
-        int processingEndDay = ScheduleService.getInstance().bookFacility(facility, quantity, startTime);
+        FacilityService.getInstance().reduceFromInventory(facility, itemId, quantity);
+        int processingEndDay = FacilityService.getInstance().bookFacility(facility, quantity, startTime);
         if (processingEndDay != facilityRecordDTO.processingEndDay) {
             int arrivalDay = calculateArrivalDay(processingEndDay, facilityRecordDTO.travelTime);
             facilityRecordDTO.processingEndDay = processingEndDay;
@@ -125,7 +127,7 @@ public class OrderProcessorImpl implements OrderProcessor {
 
     private Collection<FacilityWithItemDTO> getFacilityWithItemCollection(String itemId) {
 
-        Collection<FacilityWithItemDTO> facilityWithItemDTOs = InventoryService.getInstance().getFacilityWithItemDTOs(itemId);
+        Collection<FacilityWithItemDTO> facilityWithItemDTOs = FacilityService.getInstance().getFacilityWithItemDTOs(itemId);
         FacilityService facilityService = FacilityService.getInstance();
 
         for (FacilityWithItemDTO facilityWithItemDTO : facilityWithItemDTOs) {
@@ -147,8 +149,8 @@ public class OrderProcessorImpl implements OrderProcessor {
         return travelTime;
     }
 
-    private int getProcessingEndDay(String source, int noOfItems, int startDay) throws IllegalParameterException {
-        return ScheduleService.getInstance().getProcessDaysNeeded(source, noOfItems, startDay);
+    private int getProcessingEndDay(String source, int noOfItems, int startDay) throws IllegalParameterException, FacilityNotFoundException {
+        return FacilityService.getInstance().getProcessDaysNeeded(source, noOfItems, startDay);
     }
 
 }

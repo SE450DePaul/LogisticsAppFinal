@@ -1,4 +1,4 @@
-package logistics.inventoryservice.dtos;
+package logistics.facilityservice.dtos;
 
 /**
  * This class represents a Facility With Item Data Transfer Object,
