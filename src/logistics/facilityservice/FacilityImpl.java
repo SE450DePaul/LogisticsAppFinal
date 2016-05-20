@@ -143,7 +143,7 @@ public class FacilityImpl implements Facility
 	 * Validates that a given Facility's Name is not Null.
 	 */
 	private void validateName(String name) throws NullParameterException {
-		if (name == null | name == ""){
+		if (name == null | name.equals("")){
 			throw new NullParameterException("Facility Name cannot be Null or Empty");	
 		}
 	}

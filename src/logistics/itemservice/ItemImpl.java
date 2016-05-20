@@ -74,7 +74,7 @@ public class ItemImpl implements Item
      * Validates that an Item's name is not Empty or Null.
      */
     private void validateId(String id) throws NullParameterException {
-        if (id == null | id == ""){
+        if (id == null | id.equals("")){
             throw new NullParameterException("Item ID cannot be null or empty");
         }
     }
