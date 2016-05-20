@@ -37,13 +37,13 @@ public class InventoryServiceTest {
     public static Collection<Object[]> data()  {
         return Arrays.asList(new Object[][] {
                 { null, null, null},
-                {"ABC123", new FacilityWithItemDTO("Denver, CO", "ABC123", 80), null},
+                {"ABC123", new FacilityWithItemDTO("Denver, CO", 80), null},
                 {"RL123A", null, Arrays.asList(
-                                new FacilityWithItemDTO("Denver, CO", "RL123A", 110),
-                                new FacilityWithItemDTO("San Francisco, CA", "RL123A", 40),
-                                new FacilityWithItemDTO("New York City, NY", "RL123A", 12),
-                                new FacilityWithItemDTO("Norfolk, VA", "RL123A", 50),
-                                new FacilityWithItemDTO("Austin, TX", "RL123A", 66))
+                                new FacilityWithItemDTO("Denver, CO", 110),
+                                new FacilityWithItemDTO("San Francisco, CA", 40),
+                                new FacilityWithItemDTO("New York City, NY", 12),
+                                new FacilityWithItemDTO("Norfolk, VA", 50),
+                                new FacilityWithItemDTO("Austin, TX", 66))
                 }
         });
     }
@@ -57,7 +57,7 @@ public class InventoryServiceTest {
 
     @Test
     public void testGetFacilitiesWithItem() {
-        Collection<FacilityWithItemDTO> actual = instance.getFacilitiesWithItemDTO(itemId);
+        Collection<FacilityWithItemDTO> actual = instance.getFacilityWithItemDTOs(itemId);
         if (itemId == null){
             assertEquals(expected, actual);
         }

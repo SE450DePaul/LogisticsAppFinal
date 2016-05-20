@@ -11,17 +11,11 @@ package logistics.inventoryservice.dtos;
 public class FacilityWithItemDTO {
 
     public String name;
-    public String itemId;
     public int quantity;
 
-    public FacilityWithItemDTO(String facilityName, String itemNoId, int itemQuantity){
+    public FacilityWithItemDTO(String facilityName, int itemQuantity){
         name = facilityName;
-        itemId = itemNoId;
         quantity = itemQuantity;
-    }
-
-    public String toString() {
-        return name + " " + itemId + " " + quantity;
     }
 
     @Override
@@ -32,7 +26,6 @@ public class FacilityWithItemDTO {
         FacilityWithItemDTO facilityWithItemDTO = (FacilityWithItemDTO) o;
 
         if (!name.equals(facilityWithItemDTO.name)) return false;
-        if (!itemId.equals(facilityWithItemDTO.itemId)) return false;
         if (! (quantity == facilityWithItemDTO.quantity) ) return false;
 
         return true;

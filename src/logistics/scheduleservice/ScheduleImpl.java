@@ -64,9 +64,9 @@ public class ScheduleImpl implements Schedule
     }
 
     /*
-    /* Processes items
+    /* Processes items and return processing end day
      */
-    public boolean bookFacility(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
+    public int bookFacility(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
         validateProcessItemNum(noOfItemsToProcess);
         validateStartDay(startDay);
         buildHashMapValues(startDay, 20);
@@ -84,7 +84,7 @@ public class ScheduleImpl implements Schedule
             pointer++;
         }
 
-        return true;
+        return pointer;
    }
 
     /*

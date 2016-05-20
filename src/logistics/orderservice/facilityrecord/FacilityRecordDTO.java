@@ -26,4 +26,6 @@ public class FacilityRecordDTO {
         this.travelTime = travelTime;
         this.arrivalDay = arrivalDay;
     }
+
+
 }

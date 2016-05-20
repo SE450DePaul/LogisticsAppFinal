@@ -8,9 +8,14 @@ import logistics.utilities.exceptions.NegativeOrZeroParameterException;
  * 
  * @author David Olorundare
  */
-public interface Schedule
-{
-    public boolean bookFacility(int processItemNum, int startDay) throws NegativeOrZeroParameterException;
+public interface Schedule {
+
+    // Returns the processing end day after booking
+    public int bookFacility(int processItemNum, int startDay) throws NegativeOrZeroParameterException;
+
+    // Returns a string with schedule output
     public String getScheduleOutput();
+
+    // returns the processing end day needed without actually booking
     public int getProcessDaysNeeded(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException;
 }

@@ -9,11 +9,9 @@ package logistics.facilityservice;
  * @author Uchenna F. Okoye
  */
 
-import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.loader.factory.LoaderFactory;
-import logistics.utilities.loader.interfaces.Loader;
+import logistics.inventoryservice.Inventory;
+import logistics.utilities.exceptions.*;
+import logistics.utilities.loader.LoaderService;
 
 import java.util.*;
 
@@ -21,19 +19,11 @@ public final class FacilityService
 {
     private volatile static FacilityService instance;
     private HashMap<String, Facility> facilityHashMap = new HashMap<>();
-    private Loader<Facility> loader;
+    private LoaderService loaderService;
 
     private FacilityService() {
-        loader = LoaderFactory.build("name");
-
-        try {
-            Collection<Facility> facilities = loader.load();
-            for (Facility facility : facilities){
-                facilityHashMap.put(facility.getName(), facility);
-            }
-        } catch (LoaderFileNotFoundException e) {
-            e.printStackTrace();
-        }
+        loaderService = LoaderService.getInstance();
+        buildFacilities();
     }
     
     /*
@@ -51,6 +41,44 @@ public final class FacilityService
             }
         }
         return instance;
+    }
+
+    private void buildFacilities() {
+        loadFacilities();
+        buildInventories();
+    }
+
+    private void loadFacilities() {
+        try {
+            Collection<Facility> facilities = loaderService.loadFacilities();
+            for (Facility facility : facilities){
+                facilityHashMap.put(facility.getName(), facility);
+            }
+        } catch (LoaderConfigFilePathException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildInventories() {
+        try {
+            Collection<Inventory> inventories = loaderService.loadInventory();
+            for (Inventory inventory : inventories){
+                Facility facility = facilityHashMap.get(inventory.getFacilityName());
+                Iterator<String> iterator = inventory.getInventoryItems();
+                while (iterator.hasNext()){
+                    String itemId = iterator.next();
+                    int quantity = inventory.getQuantity(itemId);
+                    facility.addInventoryItem(itemId, quantity);
+                }
+
+            }
+        } catch (LoaderConfigFilePathException e) {
+            e.printStackTrace();
+        } catch (NegativeOrZeroParameterException e) {
+            e.printStackTrace();
+        } catch (NullParameterException e) {
+            e.printStackTrace();
+        }
     }
 
     /* 
@@ -73,6 +101,28 @@ public final class FacilityService
         }
         return facilityDTOs;
     }
+    /*
+     * Returns a list of all Facilities
+     */
+    public Set<String> getFacilityNames(){
+        return new TreeSet<String>(facilityHashMap.keySet());
+    }
+
+    /*
+     * Returns information about a Facility given its name.
+     */
+    public String getOutput(String name) throws FacilityNotFoundException {
+        validateFacilityExists(name);
+        Facility facility = facilityHashMap.get(name);
+        return facility.toString();
+    }
+
+    public String getInventoryOutput(String name) throws FacilityNotFoundException {
+        validateFacilityExists(name);
+        Facility facility = facilityHashMap.get(name);
+        return facility.getInventoryOutput();
+    }
+
 
     private void validateFacilityName(String name) throws IllegalParameterException {
         if (name == null) {
@@ -83,21 +133,11 @@ public final class FacilityService
         }
     }
 
-    /*
-     * Returns a list of all Facilities
-     */
-    public Set<String> getFacilityNames(){
-        return new TreeSet<String>(facilityHashMap.keySet());
-    }
-    
-    /*
-     * Returns information about a Facility given its name.
-     */
-    public String getOutput(String name) throws NullParameterException
-    {
-    	if (name == "")
-        	throw new NullParameterException("Facility name cannot be empty string"); 
-        Facility facility = facilityHashMap.get(name);
-        return facility.toString();
+
+
+    private void validateFacilityExists(String name) throws FacilityNotFoundException {
+        if (!facilityHashMap.containsKey(name)){
+            throw new FacilityNotFoundException("Facility " + name + "not found");
+        }
     }
 }

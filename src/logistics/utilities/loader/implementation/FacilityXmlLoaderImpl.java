@@ -2,7 +2,7 @@ package logistics.utilities.loader.implementation;
 
 import logistics.facilityservice.Facility;
 import logistics.facilityservice.FacilityFactory;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.exceptions.NullParameterException;
 import logistics.utilities.loader.interfaces.FacilityLoader;
 import org.w3c.dom.Document;
@@ -32,7 +32,7 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	        filepath = path;
 	 }
 	
-	    public ArrayList<Facility> load() throws LoaderFileNotFoundException
+	    public ArrayList<Facility> load() throws LoaderConfigFilePathException
 	    {
 
 	        ArrayList<Facility> facilities = new ArrayList<>();
@@ -45,7 +45,7 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	            File xml = new File(filepath);
 	            if (!xml.exists()) 
 	            {
-	                throw new LoaderFileNotFoundException();
+	                throw new LoaderConfigFilePathException();
 	            }
 
 	            Document doc = db.parse(xml);
@@ -62,7 +62,7 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	                }
 
 	                String entryName = node.getNodeName();
-	                if (!entryName.equals("name"))
+	                if (!entryName.equals("facility"))
 	                {
 	                    continue;
 	                    //Or perhaps throw an error
@@ -116,7 +116,7 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 					System.out.println("");
 
 				}
-			} catch (LoaderFileNotFoundException e) {
+			} catch (LoaderConfigFilePathException e) {
 				e.printStackTrace();
 			}
 	    }

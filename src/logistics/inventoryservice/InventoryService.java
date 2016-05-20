@@ -10,8 +10,7 @@ package logistics.inventoryservice;
  */
 
 import logistics.inventoryservice.dtos.FacilityWithItemDTO;
-import logistics.inventoryservice.dtos.InventoryItemDTO;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.*;
 import logistics.utilities.loader.factory.LoaderFactory;
 import logistics.utilities.loader.interfaces.Loader;
 
@@ -34,7 +33,7 @@ public final class InventoryService
             for (Inventory inventory : inventories){
                 inventoryHashMap.put(inventory.getFacilityName(), inventory);
             }
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         }
     }
@@ -56,33 +55,26 @@ public final class InventoryService
         return instance;
     }
     
-    /*
-     * Returns an Inventory Item's information given a Facility
-     * and the Item being sort for. 
-     */
-    public InventoryItemDTO getInventoryItem(String facilityName, String itemId) {
-
-        Inventory inventory = inventoryHashMap.get(facilityName);
-        if (inventory == null) { return null; }
-        Integer quantity = inventory.getQuantity(itemId);
-        if (quantity == null) { return null; }
-        return new InventoryItemDTO(itemId, quantity);
+    public boolean reduceFromInventory(String facility, String itemId, int quantity) throws QuantityExceedsAvailabilityException, NullParameterException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException {
+        Inventory inventory = inventoryHashMap.get(facility);
+        if (inventory == null) { return false; }
+        inventory.reduceFromInventory(itemId, quantity);
+        return true;
     }
 
     /*
      * Returns FacilitiesWithItemDTO
      * which provides a list of all the facilities with an item and the quantity
      */
-    public Collection<FacilityWithItemDTO> getFacilitiesWithItemDTO(String itemId){
+    public Collection<FacilityWithItemDTO> getFacilityWithItemDTOs(String itemId){
 
-        if (itemId == null) return null;
         Set<String> facilities = inventoryHashMap.keySet();
         ArrayList<FacilityWithItemDTO> facilityWithItemDTOs = new ArrayList<>();
 
         for (String facility : facilities) {
             Integer quantity = inventoryHashMap.get(facility).getQuantity(itemId);
             if (quantity != null && quantity > 0){
-                facilityWithItemDTOs.add(new FacilityWithItemDTO(facility, itemId, quantity));
+                facilityWithItemDTOs.add(new FacilityWithItemDTO(facility, quantity));
             }
         }
 

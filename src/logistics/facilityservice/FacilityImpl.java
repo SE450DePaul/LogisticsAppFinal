@@ -6,48 +6,63 @@ package logistics.facilityservice;
  * @authors David Olorundare and Uchenna F. okoye
  */
 
+import logistics.inventoryservice.Inventory;
+import logistics.inventoryservice.InventoryFactory;
+import logistics.utilities.exceptions.ItemNotFoundInActiveInventoryException;
+import logistics.utilities.exceptions.NegativeOrZeroParameterException;
 import logistics.utilities.exceptions.NullParameterException;
+import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
 
 public class FacilityImpl implements Facility
 {
     private String name;
     private Integer rate;
     private Double cost;
+	private Inventory inventory;
 
-    public FacilityImpl(String name, Integer rate, Double cost) throws NullParameterException
-    {
+    public FacilityImpl(String name, Integer rate, Double cost) throws NullParameterException {
         setName(name);
         setRate(rate);
         setCost(cost);
+		inventory = InventoryFactory.build(name);
     }
 
-    /*
-     * Helper method returns a Facility's Name.
-     */
+
 	public String getName() {
 		return name;
 	}
-
-	/*
-	 * Helper method that returns a Facility's Rate.
-	 */
 	public Integer getRate()
 	{
 		return rate;
 	}
-
-	/*
-	 * Helper method that returns to a Facility's Cost.
-	 */
 	public Double getCost()
 	{
 		return cost;
 	}
 
+	@Override
+	public String getInventoryOutput() {
+		return inventory.getInventoryOutput();
+	}
+
+	@Override
+	public void addInventoryItem(String itemId, int quantity) throws NullParameterException, NegativeOrZeroParameterException {
+		inventory.addInventoryItem(itemId, quantity);
+	}
+
+	@Override
+	public Integer getQuantity(String itemId) {
+		return inventory.getQuantity(itemId);
+	}
+
+	@Override
+	public void reduceFromInventory(String itemId, int quantity) throws NullParameterException, QuantityExceedsAvailabilityException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException {
+		inventory.reduceFromInventory(itemId, quantity);
+	}
 	/*
 	 * Helper method used to assembly a Facility's Name, Rate, and Cost, for output.
 	 */
-	public String toString() {
+	public String toStr() {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append(name);
 		stringBuffer.append("\n");
@@ -58,6 +73,8 @@ public class FacilityImpl implements Facility
 		stringBuffer.append("Cost per day: " + cost);
 		return stringBuffer.toString();
 	}
+
+
 
 	/*
 	 * Helper method used to set a Facility's Name.

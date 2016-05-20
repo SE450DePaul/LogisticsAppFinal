@@ -1,9 +1,9 @@
 package logistics.reportservice.services;
 
 import logistics.facilityservice.FacilityService;
-import logistics.inventoryservice.InventoryService;
 import logistics.networkservice.NetworkService;
 import logistics.scheduleservice.ScheduleService;
+import logistics.utilities.exceptions.FacilityNotFoundException;
 import logistics.utilities.exceptions.FacilityNotFoundInNetworkException;
 import logistics.utilities.exceptions.IllegalParameterException;
 
@@ -14,14 +14,12 @@ public final class FacilityStatusService {
     private volatile static FacilityStatusService instance;
     NetworkService networkService;
     FacilityService facilityService;
-    InventoryService inventoryService;
     ScheduleService scheduleService;
 
     private FacilityStatusService() {
 
         networkService = NetworkService.getInstance();
         facilityService = FacilityService.getInstance();
-        inventoryService = InventoryService.getInstance();
         scheduleService = ScheduleService.getInstance();
 
     }
@@ -42,7 +40,7 @@ public final class FacilityStatusService {
     }
 
 
-    public String getOutput(String facilityName) throws FacilityNotFoundInNetworkException, IllegalParameterException {
+    public String getOutput(String facilityName) throws FacilityNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundException {
 
         StringBuffer str = new StringBuffer();
         str.append("\n");
@@ -50,7 +48,7 @@ public final class FacilityStatusService {
         str.append("\n");
         str.append(networkService.getDirectLinksOutput(facilityName));
         str.append("\n");
-        str.append(inventoryService.getOutput(facilityName));
+        str.append(facilityService.getInventoryOutput(facilityName));
         str.append("\n");
         str.append(scheduleService.getOutput(facilityName));
 

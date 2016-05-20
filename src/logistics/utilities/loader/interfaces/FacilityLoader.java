@@ -1,6 +1,6 @@
 package logistics.utilities.loader.interfaces;
 
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.facilityservice.Facility;
 
 import java.util.Collection;
@@ -10,5 +10,5 @@ import java.util.Collection;
  */
 public interface FacilityLoader extends Loader<Facility>
 {
-    Collection<Facility> load() throws LoaderFileNotFoundException;
+    Collection<Facility> load() throws LoaderConfigFilePathException;
 }

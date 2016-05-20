@@ -77,19 +77,19 @@ public final class ScheduleService
     }
 
     /*
-    /* Processes item with default day of Day 1
+    /* Processes item with default day of Day 1 and returns processing end day
      */
-    public boolean bookFacility(String facility, int noOfItemsToProcess) throws NegativeOrZeroParameterException {
+    public Integer bookFacility(String facility, int noOfItemsToProcess) throws NegativeOrZeroParameterException {
         return bookFacility(facility, noOfItemsToProcess, 1);
     }
 
 
     /*
-     *  Updates schedule given a number of items to process
+     *  Updates schedule given a number of items to process and returns processing end day
      */
-    public boolean bookFacility(String facility, int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
+    public Integer bookFacility(String facility, int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
         Schedule schedule = scheduleHashMap.get(facility);
-        if (schedule == null) { return false; }
+        if (schedule == null) { return null; }
         return schedule.bookFacility(noOfItemsToProcess, startDay);
     }
 
@@ -114,8 +114,8 @@ public final class ScheduleService
             System.out.println("--------------------New Schedule when another 33 items are processed--------------------\n");
             instance.bookFacility(facility, 33);
             System.out.println(instance.getOutput("Chicago, IL"));
-            System.out.println("--------------------New Schedule when 7 more items processed----------------------------\n");
-            instance.bookFacility(facility, 7);
+            System.out.println("--------------------New Schedule when 10 more items processed----------------------------\n");
+            instance.bookFacility(facility, 10);
             System.out.println(instance.getOutput("Chicago, IL"));
         } catch (IllegalParameterException e) {
             e.printStackTrace();

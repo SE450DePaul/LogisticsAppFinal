@@ -9,7 +9,7 @@ package logistics.itemservice;
  * @author Uchenna F. Okoye
  */
 
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.loader.factory.LoaderFactory;
 import logistics.utilities.loader.interfaces.Loader;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public final class ItemCatalogService {
                 for (Item item : items){
                     itemsHash.put(item.getId(), item);
                 }
-            } catch (LoaderFileNotFoundException e) {
+            } catch (LoaderConfigFilePathException e) {
                 e.printStackTrace();
             }
     }
