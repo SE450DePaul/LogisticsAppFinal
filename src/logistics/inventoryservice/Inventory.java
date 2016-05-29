@@ -7,15 +7,12 @@ package logistics.inventoryservice;
  * @author David Olorundare
  */
 
-import logistics.utilities.exceptions.ItemNotFoundInActiveInventoryException;
-import logistics.utilities.exceptions.NegativeOrZeroParameterException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
+import logistics.utilities.exceptions.*;
 
 public interface Inventory
 {
     void reduceFromInventory(String itemId, int quantity) throws NullParameterException, QuantityExceedsAvailabilityException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException;
-    void addInventoryItem(String itemId, int quantity) throws NullParameterException;
+    void addInventoryItem(String itemId, int quantity) throws IllegalParameterException;
     Integer getQuantity(String itemId);
     String getFacilityName();
     String getInventoryOutput();

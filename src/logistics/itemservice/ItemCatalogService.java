@@ -55,16 +55,14 @@ public final class ItemCatalogService {
      */
     public String getOutput(){
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("\n");
-        stringBuffer.append("Item Catalog: ");
-        stringBuffer.append("\n");
+        stringBuffer.append("\nItem Catalog:  \n");
+
         int i = 1;
         Collection<String> itemIds = new TreeSet<>(itemsHash.keySet());
-        for (String itemId : itemIds){
+        for (String itemId : itemIds) {
             Item item = itemsHash.get(itemId);
-            stringBuffer.append(item.toString());
-            stringBuffer.append("\t");
-            if (i % 4 == 0){
+            stringBuffer.append(String.format("%-9s: $%,-5.0f\t", item.getId(), item.getPrice()));
+            if (i % 4 == 0) {
                 stringBuffer.append("\n");
             }
             i++;

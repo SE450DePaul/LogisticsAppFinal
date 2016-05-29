@@ -35,7 +35,7 @@ public class SortByArrivalDayChain extends ProcessChain {
                 } else if (o1.arrivalDay < o2.arrivalDay) {
                     return -1;
                 }
-                return 0;
+                return 1;
         }
     }
 

@@ -1,6 +1,7 @@
 package logistics.orderservice;
 
 import logistics.orderservice.dtos.OrderItemRequestDTO;
+import logistics.orderservice.dtos.OrderRequestDTO;
 import logistics.orderservice.facilityrecord.FacilityRecord;
 import logistics.orderservice.facilityrecord.FacilityRecordDTO;
 import logistics.orderservice.facilityrecord.FacilityRecordFactory;
@@ -27,10 +28,10 @@ public class OrderProcessor {
 
 
 
-    public static OrderSolutionComponent process(Collection<OrderItemRequestDTO> orderItemRequestDTOs) throws IllegalParameterException, FacilityNotFoundInNetworkException, NeighborNotFoundInNetworkException, FacilityNotFoundException {
+    public static OrderSolutionComponent process(OrderRequestDTO orderRequestDTO) throws IllegalParameterException, FacilityNotFoundInNetworkException, NeighborNotFoundInNetworkException, FacilityNotFoundException {
 
-        OrderSolutionComposite component = new OrderSolutionComposite();
-        for (OrderItemRequestDTO orderItemRequestDTO : orderItemRequestDTOs ){
+        OrderSolutionComposite component = new OrderSolutionComposite(orderRequestDTO);
+        for (OrderItemRequestDTO orderItemRequestDTO : orderRequestDTO.orderItemRequestDTOs ){
             component.addSolution(process(orderItemRequestDTO));
         }
 

@@ -3,6 +3,7 @@ package logistics.orderservice.ordersolution;
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.facilityrecord.FacilityRecord;
 
+import java.text.NumberFormat;
 import java.util.Collection;
 
 /**
@@ -67,6 +68,10 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
 
     @Override
     public void printOutput() {
-        System.out.println(orderItemRequestDTO.itemId + "\t" + orderItemRequestDTO.quantityNeeded + "\t" + getTotalCost() + "\t" + getNoOfSourcesUsed() + "\t" + getFirstDeliveryDay() + "\t" + getLastDeliveryDay());
+        System.out.format("\t%-10s%-10d%-10s%-16s%-16s%-16s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay());
+    }
+
+    private String currencyFormater() {
+        return NumberFormat.getCurrencyInstance().format(getTotalCost()).replaceAll("\\.00", "");
     }
 }

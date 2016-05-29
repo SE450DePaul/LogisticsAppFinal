@@ -3,6 +3,7 @@ package logistics.utilities.loader.implementation;
 import logistics.inventoryservice.Inventory;
 import logistics.inventoryservice.InventoryFactory;
 import logistics.inventoryservice.dtos.InventoryItemDTO;
+import logistics.utilities.exceptions.IllegalParameterException;
 import logistics.utilities.exceptions.LoaderFileNotFoundException;
 import logistics.utilities.exceptions.NullParameterException;
 import logistics.utilities.loader.interfaces.InventoryLoader;
@@ -134,6 +135,8 @@ public class InventoryXmlLoaderImpl implements InventoryLoader
 		{
 			e.printStackTrace();
 		} catch (NullParameterException e) {
+			e.printStackTrace();
+		} catch (IllegalParameterException e) {
 			e.printStackTrace();
 		}
 

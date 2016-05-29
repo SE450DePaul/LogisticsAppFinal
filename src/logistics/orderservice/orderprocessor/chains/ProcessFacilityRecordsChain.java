@@ -53,6 +53,7 @@ public class ProcessFacilityRecordsChain extends ProcessChain {
             int arrivalDay = calculateArrivalDay(processingEndDay, facilityRecordDTO.travelTime);
             facilityRecordDTO.processingEndDay = processingEndDay;
             facilityRecordDTO.arrivalDay = arrivalDay;
+            facilityRecordDTO.noOfItems = quantity;
         }
     }
 

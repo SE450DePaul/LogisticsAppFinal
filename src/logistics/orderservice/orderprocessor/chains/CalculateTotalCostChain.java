@@ -33,7 +33,7 @@ public class CalculateTotalCostChain extends ProcessChain {
 
     private double calculateCost(FacilityRecordDTO facilityRecordDTO) {
         int noOfItemsUsed = facilityRecordDTO.noOfItems;
-        double processingDays = noOfItemsUsed / facilityRecordDTO.rate;
+        int processingDays = (int) Math.ceil(noOfItemsUsed / facilityRecordDTO.rate);
         int travelDays = facilityRecordDTO.arrivalDay - facilityRecordDTO.processingEndDay;
         return (itemPrice * noOfItemsUsed) + (processingDays * facilityRecordDTO.costPerDay) + (travelDays * TRANSPORT_COST);
 

@@ -10,10 +10,7 @@ package logistics.inventoryservice;
  * @author Uchenna F. Okoye
  */
 
-import logistics.utilities.exceptions.ItemNotFoundInActiveInventoryException;
-import logistics.utilities.exceptions.NegativeOrZeroParameterException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.QuantityExceedsAvailabilityException;
+import logistics.utilities.exceptions.*;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -51,7 +48,7 @@ public class InventoryImpl implements Inventory
 	 * Adds a new Item to a Facility's Inventory given
 	 * an item ID and quantity.
 	 */
-	public void addInventoryItem(String itemId, int quantity) throws NullParameterException {
+	public void addInventoryItem(String itemId, int quantity) throws IllegalParameterException {
 		validateItem(itemId);
 		validateQuantity(quantity);
 		updateInventoryHelper(itemId, quantity);
@@ -82,10 +79,9 @@ public class InventoryImpl implements Inventory
 
 		Set<String> activeItems = activeItemHash.keySet();
 		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append("\nActive Inventory: \n\tItem Id\t\tQuantity");
 		stringBuffer.append("\n");
-		stringBuffer.append("Active Inventory: ");
-		stringBuffer.append("\n");
-		stringBuffer.append("\tItem Id\t\tQuantity");
 
 		if (activeItems.isEmpty()){
 			stringBuffer.append("None");
@@ -93,8 +89,8 @@ public class InventoryImpl implements Inventory
 
 		for (String item : activeItems){
 			int quantity = activeItemHash.get(item);
-			stringBuffer.append("\n");
-			stringBuffer.append("\t" + item + "\t\t" + quantity);
+
+			stringBuffer.append(String.format("\t%-8s\t%-4d%n", item, quantity));
 		}
 
 		stringBuffer.append("\n\n");
@@ -106,10 +102,9 @@ public class InventoryImpl implements Inventory
 		}
 
 		for (String item : depletedItems){
-			stringBuffer.append("\n");
 			stringBuffer.append("\t" + item);
 		}
-		
+
 		return stringBuffer.toString();
 	}
 
@@ -163,9 +158,12 @@ public class InventoryImpl implements Inventory
 	/*
 	 * Validates that a Facility's inventory-item name is not Null.
 	 */
-	private void validateItem(String itemId) throws NullParameterException {
+	private void validateItem(String itemId) throws IllegalParameterException {
 		if (itemId == null){
-			throw new NullParameterException();
+			throw new NullParameterException("Item cannot be null");
+		}
+		if (itemId.isEmpty()){
+			throw new IllegalParameterException("Item cannot be blank");
 		}
 	}
 }

@@ -9,19 +9,23 @@ package logistics.orderservice;
  * @author Uchenna F. Okoye
  */
 
+import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.dtos.OrderRequestDTO;
 import logistics.orderservice.order.Order;
+import logistics.orderservice.order.orderitem.OrderItem;
 import logistics.orderservice.ordersolution.OrderSolutionComponent;
 import logistics.utilities.exceptions.*;
 import logistics.utilities.loader.factory.LoaderFactory;
 import logistics.utilities.loader.interfaces.Loader;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public final class OrderService {
     private volatile static OrderService instance;
-    private Loader<OrderRequestDTO> loader;
+    private Loader<Order> loader;
     private Collection<Order> orders;
     private HashMap<String, Order> orderHashMap;
     private HashMap<String, OrderSolutionComponent> orderSolutionComponentHashMap;
@@ -29,12 +33,20 @@ public final class OrderService {
     private OrderService() {
         loader = LoaderFactory.build("orders");
         orderSolutionComponentHashMap = new HashMap<>();
+        orderHashMap = new HashMap<>();
         try {
-            Collection<OrderRequestDTO> orderRequestDTOs = loader.load();
-            for (OrderRequestDTO orderRequestDTO : orderRequestDTOs){
-
-                OrderSolutionComponent orderSolutionComponent = OrderProcessor.process(orderRequestDTO.orderItemRequestDTOs);
-//                orderHashMap.put(orderRequestDTO.orderId, OrderFactory.build(orderRequestDTO));
+            Collection<Order> orders = loader.load();
+            for (Order order: orders){
+                Collection<OrderItemRequestDTO> orderItemRequestDTOs = new ArrayList<>();
+                Iterator<OrderItem> iterator = order.getOrderItems();
+                while (iterator.hasNext()){
+                    OrderItem orderItem = iterator.next();
+                    OrderItemRequestDTO orderItemRequestDTO = new OrderItemRequestDTO(order.getDestination(), orderItem.getItemId(), order.getOrderTime(), orderItem.getQuantity());
+                    orderItemRequestDTOs.add(orderItemRequestDTO);
+                }
+                OrderRequestDTO orderRequestDTO = new OrderRequestDTO(order.getOrderId(), order.getDestination(), order.getOrderTime(), orderItemRequestDTOs);
+                OrderSolutionComponent orderSolutionComponent = OrderProcessor.process(orderRequestDTO);
+                orderHashMap.put(orderRequestDTO.orderId, order);
                 orderSolutionComponentHashMap.put(orderRequestDTO.orderId, orderSolutionComponent);
             }
 
@@ -81,7 +93,7 @@ public final class OrderService {
     public static void main(String[] args){
 
         OrderService orderService = OrderService.getInstance();
-        System.out.println("Processing Solution:");
+
         orderService.printOutput("TO-007");
 
 

@@ -3,6 +3,9 @@ package logistics.utilities.loader.implementation;
 
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.dtos.OrderRequestDTO;
+import logistics.orderservice.order.Order;
+import logistics.orderservice.order.OrderFactory;
+import logistics.utilities.exceptions.IllegalParameterException;
 import logistics.utilities.exceptions.LoaderFileNotFoundException;
 import logistics.utilities.loader.interfaces.OrderLoader;
 import org.w3c.dom.*;
@@ -26,9 +29,9 @@ public class OrderXmlLoaderImpl implements OrderLoader {
         filepath = itemFilepath;
     }
 
-    public ArrayList<OrderRequestDTO> load() throws LoaderFileNotFoundException {
+    public ArrayList<Order> load() throws LoaderFileNotFoundException {
 
-        ArrayList<OrderRequestDTO> orderRequests = new ArrayList<>();
+        ArrayList<Order> orders = new ArrayList<>();
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -65,6 +68,8 @@ public class OrderXmlLoaderImpl implements OrderLoader {
                 int orderDay = Integer.parseInt(orderDayString);
 
                 NodeList itemNodes = element.getElementsByTagName("item");
+
+                Order order;
                 ArrayList<OrderItemRequestDTO> collection = new ArrayList<>();
 
                 for (int j = 0; j < itemNodes.getLength(); j++){
@@ -88,8 +93,10 @@ public class OrderXmlLoaderImpl implements OrderLoader {
                 }
 
                 OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, destination, orderDay, collection);
-                orderRequests.add(orderRequestDTO);
+                order = OrderFactory.build(orderRequestDTO);
+                orders.add(order);
             }
+
 
 
 
@@ -99,10 +106,12 @@ public class OrderXmlLoaderImpl implements OrderLoader {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalParameterException e) {
+            e.printStackTrace();
         }
 
 
-        return orderRequests;
+        return orders;
     }
 
 
