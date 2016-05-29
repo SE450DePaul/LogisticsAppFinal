@@ -14,11 +14,13 @@ public class ReporterFactory {
             return FacilityStatusReporter.getInstance();
         } else if (type.equals("shortest path")){
             return TravelGuideReporter.getInstance();
+        } else if (type.equals("orders")){
+            return OrderReporter.getInstance();
         } else if (type.equals("everything")) {
             return ReportService.getInstance();
         }
 
-        return null;
+        return ReportService.getInstance();
     }
 
 }

@@ -35,7 +35,7 @@ public final class ReportService implements Reporter {
     public void printOutput() {
         setReportType("facility");
         reporter.printOutput();
-        setReportType("item");
+        setReportType("orders");
         reporter.printOutput();
         setReportType("shortest path");
         reporter.printOutput();

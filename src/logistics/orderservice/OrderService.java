@@ -66,10 +66,12 @@ public final class OrderService {
     }
 
 
-    public void printOutput(String orderId){
-        orderSolutionComponentHashMap.get(orderId).printOutput();
+    public void printOutput(){
+        Collection<OrderSolutionComponent> orderSolutionComponents = orderSolutionComponentHashMap.values();
+        for (OrderSolutionComponent orderSolutionComponent : orderSolutionComponents){
+            orderSolutionComponent.printOutput();
+        }
     }
-
 
     
     /*
@@ -94,7 +96,7 @@ public final class OrderService {
 
         OrderService orderService = OrderService.getInstance();
 
-        orderService.printOutput("TO-007");
+        orderService.printOutput();
 
 
     }
