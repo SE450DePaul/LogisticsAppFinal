@@ -37,7 +37,7 @@ public final class ReportService implements Reporter {
         reporter.printOutput();
         setReportType("orders");
         reporter.printOutput();
-        setReportType("shortest path");
+        setReportType("facility");
         reporter.printOutput();
     }
 

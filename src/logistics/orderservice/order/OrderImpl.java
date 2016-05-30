@@ -177,6 +177,7 @@ public class OrderImpl implements Order {
 
 	@Override
 	public void printOutput() {
+
 		System.out.format("\t%-16s%-16s%n", "Order Id:", orderId);
         System.out.format("\t%-16s%-16s%n", "Order Time:", "Day " + orderTime);
         System.out.format("\t%-16s%-16s%n", "Destination:", orderDestination);
@@ -186,8 +187,11 @@ public class OrderImpl implements Order {
         for (OrderItem orderItem : orderItems){
         	System.out.print("\t    " + i + ")  ");
         	orderItem.printOutput();
-        	i++; 
+        	i++;
+
         }
+
+
 
 		
 	}

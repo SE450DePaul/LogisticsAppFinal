@@ -16,6 +16,7 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
     private int noOfSourcesUsed = 0;
     private int firstDeliveryDay = -1;
     private int lastDeliveryDay = -1;
+    private int noOfBacklogged = 0;
     private Collection<FacilityRecord> facilityRecords;
     private OrderItemRequestDTO orderItemRequestDTO;
 
@@ -24,9 +25,12 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
         // validate order item
         this.facilityRecords = facilityRecords;
         this.orderItemRequestDTO = orderItemRequestDTO;
+        int quantityNeeded = orderItemRequestDTO.quantityNeeded;
+        int totalQuantityProvided = 0;
 
         for (FacilityRecord facilityRecord : facilityRecords){
             totalCost += facilityRecord.getTotalCost();
+            totalQuantityProvided += facilityRecord.getNoOfItems();
             noOfSourcesUsed++;
             int arrivalDay = facilityRecord.getArrivalDay();
             if (firstDeliveryDay == -1){
@@ -43,8 +47,14 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
 
         }
 
+        noOfBacklogged = quantityNeeded - totalQuantityProvided;
+
     }
 
+    @Override
+    public int getNoOfBackloggedItems() {
+        return noOfBacklogged;
+    }
 
     @Override
     public int getTotalCost(){
@@ -68,7 +78,7 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
 
     @Override
     public void printOutput() {
-        System.out.format("\t%-10s%-10d%-10s%-16s%-16s%-16s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay());
+        System.out.format("\t%-10s%-10d%-10s%-16s%-16s%-16s%-16s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay(), getNoOfBackloggedItems());
     }
     
     private String currencyFormater() {

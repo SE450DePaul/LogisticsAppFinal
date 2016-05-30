@@ -68,11 +68,19 @@ public final class OrderService {
 
     public void printOutput(){
         Collection<String> keySets = orderSolutionComponentHashMap.keySet();
+
+        int i = 0;
         for (String key : keySets){
-        	OrderSolutionComponent orderSolutionComponent = orderSolutionComponentHashMap.get(key);
+            generateDashedLine(200);
+            System.out.println("Order #" + i);
+            OrderSolutionComponent orderSolutionComponent = orderSolutionComponentHashMap.get(key);
         	Order order = orderHashMap.get(key); 
         	order.printOutput();
             orderSolutionComponent.printOutput();
+            i++;
+            if (keySets.size() == i){
+                generateDashedLine(200);
+            }
         }
     }
 
@@ -92,6 +100,14 @@ public final class OrderService {
             }
         }
         return instance;
+    }
+
+    private void generateDashedLine(int length) {
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < length; i++){
+            str.append("-");
+        }
+        System.out.println(str);
     }
 
 
