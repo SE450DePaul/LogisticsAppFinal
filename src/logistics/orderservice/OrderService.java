@@ -18,10 +18,7 @@ import logistics.utilities.exceptions.*;
 import logistics.utilities.loader.factory.LoaderFactory;
 import logistics.utilities.loader.interfaces.Loader;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public final class OrderService {
     private volatile static OrderService instance;
@@ -32,8 +29,8 @@ public final class OrderService {
 
     private OrderService() {
         loader = LoaderFactory.build("orders");
-        orderSolutionComponentHashMap = new HashMap<>();
-        orderHashMap = new HashMap<>();
+        orderSolutionComponentHashMap = new LinkedHashMap<>();
+        orderHashMap = new LinkedHashMap<>();
         try {
             Collection<Order> orders = loader.load();
             for (Order order: orders){
@@ -69,18 +66,18 @@ public final class OrderService {
     public void printOutput(){
         Collection<String> keySets = orderSolutionComponentHashMap.keySet();
 
-        int i = 0;
+        int i = 1;
         for (String key : keySets){
-            generateDashedLine(200);
+            generateDashedLine(100);
             System.out.println("Order #" + i);
             OrderSolutionComponent orderSolutionComponent = orderSolutionComponentHashMap.get(key);
         	Order order = orderHashMap.get(key); 
         	order.printOutput();
             orderSolutionComponent.printOutput();
-            i++;
             if (keySets.size() == i){
-                generateDashedLine(200);
+                generateDashedLine(100);
             }
+            i++;
         }
     }
 

@@ -29,6 +29,7 @@ public class ScheduleImpl implements Schedule
     private String facilityName;
     private int pacePerDay;
     private HashMap<Integer, Integer> dayAvailability;
+    private final int NO_TO_SHOW = 20;
 
     public String getFacilityName() {
         return facilityName;
@@ -109,11 +110,12 @@ public class ScheduleImpl implements Schedule
         str.append("Days:\t\t");
 
         Set<Integer> days = dayAvailability.keySet();
-        for(Integer day: days){
+        for (int day= 1; day <= NO_TO_SHOW; day++){
             str.append(day + "\t" );
         }
+
         str.append("\nAvailable:\t");
-        for(Integer day: dayAvailability.keySet()) {
+        for (int day= 1; day <= NO_TO_SHOW; day++){
             str.append(dayAvailability.get(day) + "\t");
         }
         str.append("\n");

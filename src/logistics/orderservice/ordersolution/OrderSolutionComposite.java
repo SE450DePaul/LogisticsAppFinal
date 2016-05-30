@@ -81,7 +81,7 @@ public class OrderSolutionComposite implements OrderSolutionComponent{
         System.out.format("\t%-20s%-16s%n", "1st Delivery Day:", getFirstDeliveryDay());
         System.out.format("\t%-20s%-16s%n%n", "Last Delivery Day:", getLastDeliveryDay());
         System.out.format("\t%-20s%n", "Order Items:");
-        System.out.format("\t%-10s%-10s%-10s%-16s%-16s%-16s%-16s%n", "Item ID", "Quantity", "Cost", "Sources Used", "First Day", "Last Day", "BackLog");
+        System.out.format("\t%-13s%-13s%-13s%-16s%-13s%-13s%-13s%n", "Item ID", "Quantity", "Cost", "Sources Used", "First Day", "Last Day", "BackLog");
         for (OrderSolutionLeaf orderSolution : orderSolutions){
             orderSolution.printOutput();
         }
