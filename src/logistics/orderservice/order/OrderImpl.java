@@ -175,5 +175,22 @@ public class OrderImpl implements Order {
             throw new IllegalParameterException("The Order ID cannot be Empty");
     }
 
+	@Override
+	public void printOutput() {
+		System.out.format("\t%-16s%-16s%n", "Order Id:", orderId);
+        System.out.format("\t%-16s%-16s%n", "Order Time:", "Day " + orderTime);
+        System.out.format("\t%-16s%-16s%n", "Destination:", orderDestination);
+        System.out.format("\t%-16s%n", "List of Order Items:");
+
+        int i= 1;
+        for (OrderItem orderItem : orderItems){
+        	System.out.print("\t    " + i + ")  ");
+        	orderItem.printOutput();
+        	i++; 
+        }
+
+		
+	}
+
 
 }

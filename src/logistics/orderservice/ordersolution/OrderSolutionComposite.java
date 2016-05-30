@@ -3,6 +3,7 @@ package logistics.orderservice.ordersolution;
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.dtos.OrderRequestDTO;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -67,19 +68,8 @@ public class OrderSolutionComposite implements OrderSolutionComponent{
 
     @Override
     public void printOutput() {
-        System.out.format("\t%-16s%-16s%n", "Order Id:", mOrderRequestDTO.orderId);
-        System.out.format("\t%-16s%-16s%n", "Order Time:", "Day " + mOrderRequestDTO.startTime);
-        System.out.format("\t%-16s%-16s%n", "Destination:", mOrderRequestDTO.destination);
-        System.out.format("\t%-16s%n", "List of Order Items:");
-        int i = 1;
-        for (OrderItemRequestDTO orderItemRequestDTO : mOrderRequestDTO.orderItemRequestDTOs){
-            System.out.format("\t\t%-16s%-10s%-10s%n", i + ") Item ID", orderItemRequestDTO.itemId + ",", "Quantity: " + orderItemRequestDTO.quantityNeeded);
-            i++;
-        }
-
-
         System.out.println("\nProcessing Solution:");
-        System.out.format("\t%-20s%-16s%n", "Total Cost:", getTotalCost());
+        System.out.format("\t%-20s%-16s%n", "Total Cost:", currencyFormater());
         System.out.format("\t%-20s%-16s%n", "1st Delivery Day:", getFirstDeliveryDay());
         System.out.format("\t%-20s%-16s%n%n", "Last Delivery Day:", getLastDeliveryDay());
         System.out.format("\t%-20s%n", "Order Items:");
@@ -87,6 +77,10 @@ public class OrderSolutionComposite implements OrderSolutionComponent{
         for (OrderSolutionLeaf orderSolution : orderSolutions){
             orderSolution.printOutput();
         }
+    }
+    
+    private String currencyFormater() {
+        return NumberFormat.getCurrencyInstance().format(getTotalCost()).replaceAll("\\.00", "");
     }
 
 

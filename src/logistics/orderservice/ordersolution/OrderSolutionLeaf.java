@@ -70,8 +70,10 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
     public void printOutput() {
         System.out.format("\t%-10s%-10d%-10s%-16s%-16s%-16s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay());
     }
-
+    
     private String currencyFormater() {
         return NumberFormat.getCurrencyInstance().format(getTotalCost()).replaceAll("\\.00", "");
     }
+
+    
 }

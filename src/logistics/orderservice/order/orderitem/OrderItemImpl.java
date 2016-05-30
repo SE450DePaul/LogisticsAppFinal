@@ -54,4 +54,12 @@ public class OrderItemImpl implements OrderItem {
             throw new IllegalParameterException("Item cannot be blank");
         }
     }
+
+	@Override
+	public void printOutput() {
+
+        System.out.format("%-16s%-10s%-10s%n", "Item ID", itemId + ",", "Quantity: " + quantity);
+
+		
+	}
 }

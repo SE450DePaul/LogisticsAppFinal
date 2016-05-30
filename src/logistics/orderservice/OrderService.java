@@ -67,8 +67,11 @@ public final class OrderService {
 
 
     public void printOutput(){
-        Collection<OrderSolutionComponent> orderSolutionComponents = orderSolutionComponentHashMap.values();
-        for (OrderSolutionComponent orderSolutionComponent : orderSolutionComponents){
+        Collection<String> keySets = orderSolutionComponentHashMap.keySet();
+        for (String key : keySets){
+        	OrderSolutionComponent orderSolutionComponent = orderSolutionComponentHashMap.get(key);
+        	Order order = orderHashMap.get(key); 
+        	order.printOutput();
             orderSolutionComponent.printOutput();
         }
     }
