@@ -2,6 +2,8 @@ package logistics.orderservice.orderprocessor.chains;
 
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.orderprocessor.ProcessChain;
+import logistics.utilities.exceptions.IllegalParameterException;
+import logistics.orderservice.facilityrecord.FacilityRecord;
 import logistics.orderservice.facilityrecord.FacilityRecordDTO;
 
 import java.util.Collection;
@@ -23,19 +25,27 @@ public class CalculateTotalCostChain extends ProcessChain {
     }
 
     @Override
-    protected Collection<FacilityRecordDTO> buildFacilityRecordDTOs(){
-        for (FacilityRecordDTO facilityRecordDTO : facilityRecordDTOs){
-            double totalCost = calculateCost(facilityRecordDTO);
-            facilityRecordDTO.totalCost = totalCost;
+    protected Collection<FacilityRecord> buildFacilityRecord()
+    {
+        for (FacilityRecord facilityRec : facilityRecords)
+        {
+            double totalCost = calculateCost(facilityRec);
+            try {
+				facilityRec.setTotalCost(totalCost);
+			} catch (IllegalParameterException e) {
+			
+				e.printStackTrace();
+			}
         }
-        return facilityRecordDTOs;
+        return facilityRecords;
+        
     }
 
-    private double calculateCost(FacilityRecordDTO facilityRecordDTO) {
-        int noOfItemsUsed = facilityRecordDTO.noOfItems;
-        int processingDays = (int) Math.ceil(noOfItemsUsed / facilityRecordDTO.rate);
-        int travelDays = facilityRecordDTO.arrivalDay - facilityRecordDTO.processingEndDay;
-        return (itemPrice * noOfItemsUsed) + (processingDays * facilityRecordDTO.costPerDay) + (travelDays * TRANSPORT_COST);
+    private double calculateCost(FacilityRecord facilityRecord) {
+        int noOfItemsUsed = facilityRecord.getNoOfItems();
+        int processingDays = (int) Math.ceil(noOfItemsUsed / facilityRecord.getRate());
+        int travelDays = facilityRecord.getArrivalDay() - facilityRecord.getProcessingEndDay();
+        return (itemPrice * noOfItemsUsed) + (processingDays * facilityRecord.getCostPerDay()) + (travelDays * TRANSPORT_COST);
 
     }
 

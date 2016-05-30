@@ -3,7 +3,6 @@ package logistics.orderservice;
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.dtos.OrderRequestDTO;
 import logistics.orderservice.facilityrecord.FacilityRecord;
-import logistics.orderservice.facilityrecord.FacilityRecordDTO;
 import logistics.orderservice.facilityrecord.FacilityRecordFactory;
 import logistics.orderservice.orderprocessor.ProcessChain;
 import logistics.orderservice.orderprocessor.ProcessChainBuilder;
@@ -40,11 +39,7 @@ public class OrderProcessor {
 
     private static OrderSolutionLeaf process(OrderItemRequestDTO orderItemRequestDTO) throws IllegalParameterException, FacilityNotFoundInNetworkException, NeighborNotFoundInNetworkException, FacilityNotFoundException {
         ProcessChain processChain = ProcessChainBuilder.build(orderItemRequestDTO);
-        Collection<FacilityRecordDTO> facilityRecordDTOs = processChain.process();
-        Collection<FacilityRecord> facilityRecords = new ArrayList<>();
-        for (FacilityRecordDTO facilityRecordDTO : facilityRecordDTOs){
-            facilityRecords.add(FacilityRecordFactory.build(facilityRecordDTO));
-        }
+        Collection<FacilityRecord> facilityRecords = processChain.process();   
         OrderSolutionLeaf orderSolutionLeaf = new OrderSolutionLeaf(orderItemRequestDTO, facilityRecords);
         return orderSolutionLeaf;
     }

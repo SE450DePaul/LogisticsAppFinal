@@ -1,7 +1,7 @@
 package logistics.orderservice.orderprocessor.chains;
 
 import logistics.orderservice.orderprocessor.ProcessChain;
-import logistics.orderservice.facilityrecord.FacilityRecordDTO;
+import logistics.orderservice.facilityrecord.FacilityRecord;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -17,22 +17,22 @@ public class SortByArrivalDayChain extends ProcessChain {
     }
 
     @Override
-    protected Collection<FacilityRecordDTO> buildFacilityRecordDTOs() {
-        return sort(facilityRecordDTOs);
+    protected Collection<FacilityRecord> buildFacilityRecord() {
+        return sort(facilityRecords);
     }
 
-    public Collection<FacilityRecordDTO> sort(Collection<FacilityRecordDTO> facilityRecordDTOs) {
-        TreeSet<FacilityRecordDTO> facilityRecordDTOsTreeSet = new TreeSet<>(new FacilityRecordComparator());
-        facilityRecordDTOsTreeSet.addAll(facilityRecordDTOs);
-        return facilityRecordDTOsTreeSet;
+    public Collection<FacilityRecord> sort(Collection<FacilityRecord> facilityRecords) {
+        TreeSet<FacilityRecord> facilityRecordsTreeSet = new TreeSet<>(new FacilityRecordComparator());
+        facilityRecordsTreeSet.addAll(facilityRecords);
+        return facilityRecordsTreeSet;
     }
 
-    private class FacilityRecordComparator implements Comparator<FacilityRecordDTO>{
+    private class FacilityRecordComparator implements Comparator<FacilityRecord>{
         @Override
-        public int compare(FacilityRecordDTO o1, FacilityRecordDTO o2) {
-                if (o1.arrivalDay > o2.arrivalDay) {
+        public int compare(FacilityRecord o1, FacilityRecord o2) {
+                if (o1.getArrivalDay() > o2.getArrivalDay()) {
                     return 1;
-                } else if (o1.arrivalDay < o2.arrivalDay) {
+                } else if (o1.getArrivalDay() < o2.getArrivalDay()) {
                     return -1;
                 }
                 return 1;

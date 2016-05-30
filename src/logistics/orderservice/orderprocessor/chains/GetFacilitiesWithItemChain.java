@@ -6,7 +6,9 @@ import logistics.networkservice.NetworkService;
 import logistics.networkservice.travelguide.TravelGuideDTO;
 import logistics.orderservice.dtos.OrderItemRequestDTO;
 import logistics.orderservice.orderprocessor.ProcessChain;
+import logistics.orderservice.facilityrecord.FacilityRecord;
 import logistics.orderservice.facilityrecord.FacilityRecordDTO;
+import logistics.orderservice.facilityrecord.FacilityRecordFactory;
 import logistics.utilities.exceptions.*;
 
 import java.util.ArrayList;
@@ -25,28 +27,28 @@ public class GetFacilitiesWithItemChain extends ProcessChain {
     }
 
     @Override
-    protected void validateFacilityRecordDTOs(Collection<FacilityRecordDTO> facilityRecordDTOs){
+    protected void validateFacilityRecord(Collection<FacilityRecord> facilityRecords){
         return;
     }
 
     @Override
-    public Collection<FacilityRecordDTO> buildFacilityRecordDTOs() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException, FacilityNotFoundException {
-        return getFacilityRecordDTOs();
+    public Collection<FacilityRecord> buildFacilityRecord() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException, FacilityNotFoundException {
+        return getFacilityRecords();
     }
 
-    public Collection<FacilityRecordDTO> getFacilityRecordDTOs() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException {
+    public Collection<FacilityRecord> getFacilityRecords() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException {
         Collection<FacilityWithItemDTO> facilitiesWithItemDTO = inventoryService.getFacilitiesWithItemDTO(orderItemRequestDTO.itemId);
-        Collection<FacilityRecordDTO> facilityRecordDTOs = new ArrayList<>();
+        Collection<FacilityRecord> facilityRecords = new ArrayList<>();
         for (FacilityWithItemDTO facilityWithItemDTO : facilitiesWithItemDTO) {
             if (!facilityWithItemDTO.name.equals(orderItemRequestDTO.destination)){
-                facilityRecordDTOs.add(buildFacilityRecord(facilityWithItemDTO));
+                facilityRecords.add(buildFacilityRecord(facilityWithItemDTO));
             }
         }
 
-        return facilityRecordDTOs;
+        return facilityRecords;
     }
 
-    private FacilityRecordDTO buildFacilityRecord(FacilityWithItemDTO facility) throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException {
+    private FacilityRecord buildFacilityRecord(FacilityWithItemDTO facility) throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException {
         String source = facility.name;
         int noOfItems = facility.quantity;
         int travelTime = getTravelTime(source, orderItemRequestDTO.destination);
@@ -56,9 +58,10 @@ public class GetFacilitiesWithItemChain extends ProcessChain {
         FacilityDTO facilityDTO = facilityService.getFacility(source);
         double costPerDay = facilityDTO.cost;
         int rate = facilityDTO.rate;
-        FacilityRecordDTO facilityRecordDTO = new FacilityRecordDTO(source, noOfItems, itemPrice, processingEndDay, travelTime, arrivalDay, costPerDay, rate);
+        FacilityRecordDTO facilityRecordDTO = new FacilityRecordDTO(source, noOfItems, itemPrice, processingEndDay, travelTime, arrivalDay, costPerDay, rate); 
+        FacilityRecord facilityRecord = FacilityRecordFactory.build(facilityRecordDTO);
 
-        return facilityRecordDTO;
+        return facilityRecord;
     }
 
 

@@ -3,6 +3,7 @@ package logistics.orderservice.orderprocessor;
 import logistics.facilityservice.FacilityService;
 import logistics.inventoryservice.InventoryService;
 import logistics.itemservice.ItemCatalogService;
+import logistics.orderservice.facilityrecord.FacilityRecord;
 import logistics.orderservice.facilityrecord.FacilityRecordDTO;
 import logistics.scheduleservice.ScheduleService;
 import logistics.utilities.exceptions.*;
@@ -15,7 +16,7 @@ import java.util.Collection;
 public abstract class ProcessChain {
 
     private ProcessChain chain;
-    protected Collection<FacilityRecordDTO> facilityRecordDTOs;
+    protected Collection<FacilityRecord> facilityRecords;
     protected InventoryService inventoryService = InventoryService.getInstance();
     protected ScheduleService scheduleService = ScheduleService.getInstance();
     protected FacilityService facilityService = FacilityService.getInstance();
@@ -25,27 +26,27 @@ public abstract class ProcessChain {
         this.chain = chain;
     }
 
-    public Collection<FacilityRecordDTO> process() throws FacilityNotFoundInNetworkException, IllegalParameterException, NeighborNotFoundInNetworkException, FacilityNotFoundException {
-        facilityRecordDTOs = buildFacilityRecordDTOs();
+    public Collection<FacilityRecord> process() throws FacilityNotFoundInNetworkException, IllegalParameterException, NeighborNotFoundInNetworkException, FacilityNotFoundException {
+        facilityRecords = buildFacilityRecord();
         if (chain != null){
-            chain.setFacilityRecordDTOs(facilityRecordDTOs);
-            facilityRecordDTOs = chain.process();
+            chain.setFacilityRecord(facilityRecords);
+            facilityRecords = chain.process();
         }
-        return facilityRecordDTOs;
+        return facilityRecords;
     }
 
-    protected void setFacilityRecordDTOs(Collection<FacilityRecordDTO> facilityRecordDTOs) throws NullParameterException {
-        validateFacilityRecordDTOs(facilityRecordDTOs);
-        this.facilityRecordDTOs = facilityRecordDTOs;
+    protected void setFacilityRecord(Collection<FacilityRecord> facilityRecord) throws NullParameterException {
+        validateFacilityRecord(facilityRecord);
+        this.facilityRecords = facilityRecord;
     };
 
-    protected void validateFacilityRecordDTOs(Collection<FacilityRecordDTO> facilityRecordDTOs) throws NullParameterException {
-        if (facilityRecordDTOs == null){
-            throw new NullParameterException("Facility Record DTO cannot be null unless overridden");
+    protected void validateFacilityRecord(Collection<FacilityRecord> facilityRecord) throws NullParameterException {
+        if (facilityRecord == null){
+            throw new NullParameterException("Facility Record  cannot be null unless overridden");
         }
     }
 
-    protected abstract Collection<FacilityRecordDTO> buildFacilityRecordDTOs() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException, FacilityNotFoundException;
+    protected abstract Collection<FacilityRecord> buildFacilityRecord() throws NeighborNotFoundInNetworkException, IllegalParameterException, FacilityNotFoundInNetworkException, FacilityNotFoundException;
 
     protected int calculateArrivalDay(int processingEndDay, int travelTime){
         return processingEndDay + travelTime;

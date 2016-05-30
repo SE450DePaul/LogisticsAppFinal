@@ -10,7 +10,7 @@ package logistics.orderservice.facilityrecord;
 import logistics.utilities.exceptions.IllegalParameterException;
 
 public class FacilityRecordFactory {
-    public static FacilityRecord build(FacilityRecordDTO facilityRecordDTO) throws IllegalParameterException {
+    public static FacilityRecord build(FacilityRecordDTO facilityRecordDTO) throws IllegalParameterException  {
         return new FacilityRecordImpl(facilityRecordDTO);
     }
 }
