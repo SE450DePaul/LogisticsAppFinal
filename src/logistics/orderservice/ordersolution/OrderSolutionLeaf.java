@@ -78,9 +78,16 @@ public class OrderSolutionLeaf implements OrderSolutionComponent{
 
     @Override
     public void printOutput() {
-        System.out.format("\t%-13s%-13d%-13s%-16s%-13s%-13s%-13s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay(), getNoOfBackloggedItems());
+        System.out.format("\t%-13s%-13d%-13s%-16s%-13s%-13s%n", orderItemRequestDTO.itemId, orderItemRequestDTO.quantityNeeded, currencyFormater(), getNoOfSourcesUsed(), getFirstDeliveryDay(), getLastDeliveryDay());
     }
-    
+
+    @Override
+    public void printBackOrdered() {
+        if (noOfBacklogged > 0){
+            System.out.format("\t- %d of Item %s have been Back-Ordered.", noOfBacklogged, orderItemRequestDTO.itemId);
+        }
+    }
+
     private String currencyFormater() {
         return NumberFormat.getCurrencyInstance().format(getTotalCost()).replaceAll("\\.00", "");
     }

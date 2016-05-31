@@ -9,5 +9,6 @@ public interface OrderSolutionComponent {
     int getLastDeliveryDay();
     int getNoOfSourcesUsed();
     void printOutput();
+    void printBackOrdered();
     int getNoOfBackloggedItems();
 }

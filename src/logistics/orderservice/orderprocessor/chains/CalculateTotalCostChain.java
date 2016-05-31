@@ -1,10 +1,9 @@
 package logistics.orderservice.orderprocessor.chains;
 
 import logistics.orderservice.dtos.OrderItemRequestDTO;
+import logistics.orderservice.facilityrecord.FacilityRecord;
 import logistics.orderservice.orderprocessor.ProcessChain;
 import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.orderservice.facilityrecord.FacilityRecord;
-import logistics.orderservice.facilityrecord.FacilityRecordDTO;
 
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public class CalculateTotalCostChain extends ProcessChain {
 
     private double calculateCost(FacilityRecord facilityRecord) {
         int noOfItemsUsed = facilityRecord.getNoOfItems();
-        int processingDays = (int) Math.ceil(noOfItemsUsed / facilityRecord.getRate());
+        double processingDays = noOfItemsUsed / facilityRecord.getRate();
         int travelDays = facilityRecord.getArrivalDay() - facilityRecord.getProcessingEndDay();
         return (itemPrice * noOfItemsUsed) + (processingDays * facilityRecord.getCostPerDay()) + (travelDays * TRANSPORT_COST);
 
