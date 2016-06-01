@@ -13,8 +13,7 @@ package logistics.scheduleservice;
  * @author David Olorundare and uchenna f. okoye
  */
 
-import logistics.facilityservice.FacilityDTO;
-import logistics.facilityservice.FacilityService;
+import logistics.facilityservice.dtos.FacilityDTO;
 import logistics.utilities.exceptions.IllegalParameterException;
 import logistics.utilities.exceptions.NegativeOrZeroParameterException;
 import logistics.utilities.exceptions.NullParameterException;
@@ -35,7 +34,7 @@ public class ScheduleImpl implements Schedule
         return facilityName;
     }
 
-    public ScheduleImpl(FacilityDTO facility) throws NullParameterException {
+    public ScheduleImpl(FacilityDTO facility) throws IllegalParameterException {
         validateFacilityDTO(facility);
     	facilityName = facility.name;
         pacePerDay = facility.rate;
@@ -72,7 +71,7 @@ public class ScheduleImpl implements Schedule
     /*
     /* Processes items
      */
-    public boolean bookFacility(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
+    public int bookFacility(int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException {
         validateProcessItemNum(noOfItemsToProcess);
         validateStartDay(startDay);
         int howManyToBuild = (noOfItemsToProcess/pacePerDay) + 1;
@@ -95,7 +94,7 @@ public class ScheduleImpl implements Schedule
             pointer++;
         }
 
-        return true;
+        return pointer;
    }
 
     /*
@@ -135,9 +134,10 @@ public class ScheduleImpl implements Schedule
         }
     }
 
-    private void validateFacilityDTO(FacilityDTO facilityDTO) throws NullParameterException {
+    private void validateFacilityDTO(FacilityDTO facilityDTO) throws IllegalParameterException {
         if (facilityDTO == null)
             throw new NullParameterException("Facility cannot be null");
+        validateRateAndName(facilityDTO.name, facilityDTO.rate);
     }
 
     private void validateProcessItemNum(int noOfItemsToProcess) throws NegativeOrZeroParameterException {
@@ -151,40 +151,18 @@ public class ScheduleImpl implements Schedule
         }
     }
 
-    // Test that this class works
-    public static void main(String[] args)
-    {
-		FacilityService instance = FacilityService.getInstance();
-
-		ScheduleImpl schedule;
-		try
-		{
-			schedule = new ScheduleImpl(instance.getFacility("San Francisco, CA"));
-			System.out.println("-----------Initial Schedule for San Francisco Facility ------------------------------------------");
-			System.out.println(schedule.getScheduleOutput());
-            System.out.println("Days needed to process RL123A for 40 items on Day 2: " + schedule.getProcessDaysNeeded(40, 2));
-			schedule.bookFacility(40, 2);
-			System.out.println("-----------New Schedule After Processing 40 Items ------------------------------------------");
-			System.out.println(schedule.getScheduleOutput());
-			System.out.println("-----------New Schedule After Processing another 33 Items------------------------------------------");
-			schedule.bookFacility(33, 1);
-			System.out.println(schedule.getScheduleOutput());
-			System.out.println("-----------------New Schedule After Processing 7 more Items------------------------------------");
-			schedule.bookFacility(7, 1);
-			System.out.println(schedule.getScheduleOutput());
-		}
-		catch (NullParameterException e)
-		{
-			e.printStackTrace();
-		}
-		catch (NegativeOrZeroParameterException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalParameterException e) {
-            e.printStackTrace();
+    private void validateRateAndName(String facilityName, int rate) throws IllegalParameterException {
+        if (facilityName == null) {
+            throw new NullParameterException("Facility cannot be null");
         }
-
+        if (facilityName.equals("")) {
+            throw new IllegalParameterException("Facility cannot be blank");
+        }
+        if (rate <= 0){
+            throw new NegativeOrZeroParameterException("Rate cannot be a negative or 0");
+        }
     }
+
 }
 
 

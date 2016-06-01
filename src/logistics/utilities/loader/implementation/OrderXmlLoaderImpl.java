@@ -6,7 +6,7 @@ import logistics.orderservice.dtos.OrderRequestDTO;
 import logistics.orderservice.order.Order;
 import logistics.orderservice.order.OrderFactory;
 import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.loader.interfaces.OrderLoader;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -29,7 +29,7 @@ public class OrderXmlLoaderImpl implements OrderLoader {
         filepath = itemFilepath;
     }
 
-    public ArrayList<Order> load() throws LoaderFileNotFoundException {
+    public ArrayList<Order> load() throws LoaderConfigFilePathException {
 
         ArrayList<Order> orders = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class OrderXmlLoaderImpl implements OrderLoader {
 
             File xml = new File(filepath);
             if (!xml.exists()) {
-                throw new LoaderFileNotFoundException();
+                throw new LoaderConfigFilePathException();
             }
 
             Document doc = db.parse(xml);
@@ -121,7 +121,7 @@ public class OrderXmlLoaderImpl implements OrderLoader {
         OrderXmlLoaderImpl xmlLoader =  new OrderXmlLoaderImpl("data/orders.xml");
         try {
             xmlLoader.load();
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         }
 

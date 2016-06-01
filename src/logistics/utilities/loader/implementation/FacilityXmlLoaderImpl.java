@@ -2,7 +2,8 @@ package logistics.utilities.loader.implementation;
 
 import logistics.facilityservice.Facility;
 import logistics.facilityservice.FacilityFactory;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.IllegalParameterException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.exceptions.NullParameterException;
 import logistics.utilities.loader.interfaces.FacilityLoader;
 import org.w3c.dom.Document;
@@ -19,106 +20,124 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * 
+ *
  * @author David Olorundare
  *
  */
 public class FacilityXmlLoaderImpl implements FacilityLoader
 {
 
-	 private String filepath;
-	 public FacilityXmlLoaderImpl(String path)
-	 {
-	        filepath = path;
-	 }
-	
-	    public ArrayList<Facility> load() throws LoaderFileNotFoundException
-	    {
+	private String filepath;
+	public FacilityXmlLoaderImpl(String path)
+	{
+		filepath = path;
+	}
 
-	        ArrayList<Facility> facilities = new ArrayList<>();
+	public ArrayList<Facility> load() throws LoaderConfigFilePathException
+	{
 
-	        try 
-	        {
-	            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	            DocumentBuilder db = dbf.newDocumentBuilder();
+		ArrayList<Facility> facilities = new ArrayList<>();
 
-	            File xml = new File(filepath);
-	            if (!xml.exists()) 
-	            {
-	                throw new LoaderFileNotFoundException();
-	            }
+		try
+		{
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
 
-	            Document doc = db.parse(xml);
-	            Element documentElement = doc.getDocumentElement();
-	            documentElement.normalize();
-
-	            NodeList facilityEntries = documentElement.getChildNodes();
-	            for (int i = 0; i < facilityEntries.getLength(); i++) 
-	            {
-	                Node node = facilityEntries.item(i);
-	                if (node.getNodeType() == Node.TEXT_NODE) 
-	                {
-	                    continue;
-	                }
-
-	                String entryName = node.getNodeName();
-	                if (!entryName.equals("facility"))
-	                {
-	                    continue;
-	                    //Or perhaps throw an error
-	                }
-
-
-	                Element element = (Element) facilityEntries.item(i);
-	                NodeList nameNode = element.getElementsByTagName("name");
-	                NodeList rateNode = element.getElementsByTagName("rate");
-	                NodeList costNode = element.getElementsByTagName("cost");
-	                
-	                String name = nameNode.item(0).getTextContent();
-	                Integer rate = Integer.parseInt(rateNode.item(0).getTextContent());
-	                Double cost = Double.parseDouble(costNode.item(0).getTextContent());
-	                
-	                Facility facility = FacilityFactory.build(name, rate, cost);
-					facilities.add(facility);
-	            }
-	        } 
-	        catch (ParserConfigurationException e) 
-	        {
-	            e.printStackTrace();
-	        } 
-	        catch (SAXException e) 
-	        {
-	            e.printStackTrace();
-	        } 
-	        catch (IOException e) 
-	        {
-	            e.printStackTrace();
-	        } catch (NullParameterException e) {
-				e.printStackTrace();
+			File xml = new File(filepath);
+			if (!xml.exists())
+			{
+				throw new LoaderConfigFilePathException();
 			}
 
-			return facilities;
-	    }
+			Document doc = db.parse(xml);
+			Element documentElement = doc.getDocumentElement();
+			documentElement.normalize();
+
+			NodeList facilityEntries = documentElement.getChildNodes();
+			for (int i = 0; i < facilityEntries.getLength(); i++)
+			{
+				Node node = facilityEntries.item(i);
+				if (node.getNodeType() == Node.TEXT_NODE)
+				{
+					continue;
+				}
+
+				String entryName = node.getNodeName();
+				if (!entryName.equals("facility"))
+				{
+					continue;
+					//Or perhaps throw an error
+				}
 
 
+				Element element = (Element) facilityEntries.item(i);
+				NodeList nameNode = element.getElementsByTagName("name");
+				NodeList rateNode = element.getElementsByTagName("rate");
+				NodeList costNode = element.getElementsByTagName("cost");
 
-	    public static void main(String[] args){
+				String name = nameNode.item(0).getTextContent();
+				Integer rate = Integer.parseInt(rateNode.item(0).getTextContent());
+				Double cost = Double.parseDouble(costNode.item(0).getTextContent());
 
-	        FacilityXmlLoaderImpl xmlLoader =  new FacilityXmlLoaderImpl("data/facilities.xml");
-			ArrayList<Facility> facilities;
-			try {
-				facilities = xmlLoader.load();
-				for (Facility f : facilities){
+				Facility facility = FacilityFactory.build(name, rate, cost);
 
-					System.out.println(f.getName());
-					System.out.println("Cost: " + f.getCost());
-					System.out.println("Rate: " + f.getRate());
-					System.out.println("");
+				NodeList itemNodes = element.getElementsByTagName("item");
+				for (int j = 0; j < itemNodes.getLength(); j++){
+
+					node = itemNodes.item(j);
+					if (node.getNodeType() == Node.TEXT_NODE){
+						continue;
+					}
+
+					entryName = node.getNodeName();
+					if (!entryName.equals("item")){
+						continue;
+					}
+
+					element = (Element) itemNodes.item(j);
+					String itemId = element.getElementsByTagName("id").item(0).getTextContent();
+					String quantityString = element.getElementsByTagName("quantity").item(0).getTextContent();
+					int quantity = Integer.parseInt(quantityString);
+					facility.addInventoryItem(itemId, quantity);
 
 				}
-			} catch (LoaderFileNotFoundException e) {
-				e.printStackTrace();
+
+				facilities.add(facility);
 			}
-	    }
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NullParameterException e) {
+			e.printStackTrace();
+		} catch (IllegalParameterException e) {
+			e.printStackTrace();
+		}
+
+		return facilities;
+	}
+
+
+
+	public static void main(String[] args){
+
+		FacilityXmlLoaderImpl xmlLoader =  new FacilityXmlLoaderImpl("data/facilities.xml");
+		ArrayList<Facility> facilities;
+		try {
+			facilities = xmlLoader.load();
+			for (Facility f : facilities){
+
+				System.out.println(f.getFacilityName());
+				System.out.println("Cost: " + f.getCost());
+				System.out.println("Rate: " + f.getRate());
+				System.out.println("");
+
+			}
+		} catch (LoaderConfigFilePathException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

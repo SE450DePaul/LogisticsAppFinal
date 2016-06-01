@@ -5,15 +5,13 @@ package logistics.facilityservice;
  * It provides methods for creating a Facility (using a Facility Factory), returning
  * a Facility's information to a requesting client, as well as display the 
  * list of all available Facilities.
- * 
+ *
  * @author Uchenna F. Okoye
  */
 
-import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
-import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.loader.factory.LoaderFactory;
-import logistics.utilities.loader.interfaces.Loader;
+import logistics.facilityservice.dtos.FacilityWithItemDTO;
+import logistics.utilities.exceptions.*;
+import logistics.utilities.loader.LoaderService;
 
 import java.util.*;
 
@@ -21,21 +19,20 @@ public final class FacilityService
 {
     private volatile static FacilityService instance;
     private HashMap<String, Facility> facilityHashMap = new HashMap<>();
-    private Loader<Facility> loader;
+    private LoaderService loaderService;
 
     private FacilityService() {
-        loader = LoaderFactory.build("facility");
-
+        loaderService = LoaderService.getInstance();
         try {
-            Collection<Facility> facilities = loader.load();
+            Collection<Facility> facilities = loaderService.loadFacilities();
             for (Facility facility : facilities){
-                facilityHashMap.put(facility.getName(), facility);
+                facilityHashMap.put(facility.getFacilityName(), facility);
             }
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         }
     }
-    
+
     /*
      * Returns an instance of the Facility Service.
      */
@@ -53,51 +50,87 @@ public final class FacilityService
         return instance;
     }
 
-    /* 
-     * Returns a FacilityDTO given the name of the Facility.
-     */
-    public FacilityDTO getFacility(String name) throws IllegalParameterException {
-        validateFacilityName(name);
-    	Facility facility = facilityHashMap.get(name);
-        if (facility == null) return null;
-        return new FacilityDTO(facility.getName(), facility.getCost(), facility.getRate());
-    }
-
-    public Collection<FacilityDTO> getFacilityDTOs() {
-        Collection<String> facilityNames = facilityHashMap.keySet();
-        Collection<FacilityDTO> facilityDTOs = new ArrayList<FacilityDTO>();
-        for (String facilityName : facilityNames){
-            Facility facility = facilityHashMap.get(facilityName);
-            FacilityDTO facilityDTO = new FacilityDTO(facility.getName(), facility.getCost(), facility.getRate());
-            facilityDTOs.add(facilityDTO);
-        }
-        return facilityDTOs;
-    }
-
-    private void validateFacilityName(String name) throws IllegalParameterException {
-        if (name == null) {
-            throw new NullParameterException("Facility name cannot be null");
-        }
-        if (name.equals("")){
-            throw new IllegalParameterException("Facility name cannot be empty string");
-        }
-    }
-
     /*
      * Returns a list of all Facilities
      */
     public Set<String> getFacilityNames(){
-        return new TreeSet<String>(facilityHashMap.keySet());
+        return new TreeSet<>(facilityHashMap.keySet());
     }
-    
+
     /*
      * Returns information about a Facility given its name.
      */
-    public String getOutput(String name) throws NullParameterException
-    {
-    	if (name.equals(""))
-        	throw new NullParameterException("Facility name cannot be empty string"); 
+    public String getOutput(String name) throws FacilityNotFoundException {
+        validateFacilityExists(name);
         Facility facility = facilityHashMap.get(name);
-        return facility.toString();
+        return facility.getFacilityOutput();
+    }
+
+    public String getInventoryOutput(String name) throws FacilityNotFoundException {
+        validateFacilityExists(name);
+        Facility facility = facilityHashMap.get(name);
+        return facility.getInventoryOutput();
+    }
+
+    public String getScheduleOutput(String name) throws FacilityNotFoundException {
+        validateFacilityExists(name);
+        Facility facility = facilityHashMap.get(name);
+        return facility.getScheduleOutput();
+    }
+
+
+    public Integer getProcessDaysNeeded(String facilityName, int noOfItemsToProcess, int startDay) throws FacilityNotFoundException, NegativeOrZeroParameterException {
+        validateFacilityExists(facilityName);
+        Facility facility = facilityHashMap.get(facilityName);
+        return facility.getProcessDaysNeeded(noOfItemsToProcess, startDay);
+    }
+
+    public boolean reduceFromInventory(String facilityName, String itemId, int quantity) throws QuantityExceedsAvailabilityException, NullParameterException, ItemNotFoundInActiveInventoryException, NegativeOrZeroParameterException, FacilityNotFoundException {
+        validateFacilityExists(facilityName);
+        Facility facility = facilityHashMap.get(facilityName);
+        facility.reduceFromInventory(itemId, quantity);
+        return true;
+    }
+
+    /**
+     * Returns FacilitiesWithItemDTO
+     * which provides a list of all the facilities with an item and the quantity
+     */
+    public Collection<FacilityWithItemDTO> getFacilityWithItemDTOs(String itemId){
+
+        Collection<Facility> facilities = facilityHashMap.values();
+        ArrayList<FacilityWithItemDTO> facilityWithItemDTOs = new ArrayList<>();
+
+        for (Facility facility : facilities) {
+            Integer quantity = facility.getQuantity(itemId);
+            if (quantity != null && quantity > 0){
+                facilityWithItemDTOs.add(new FacilityWithItemDTO(facility.getFacilityName(), itemId, quantity, facility.getRate(), facility.getCost()));
+            }
+        }
+
+        return facilityWithItemDTOs;
+    }
+
+    /**
+     /* Processes item with default day of Day 1 and returns processing end day
+     */
+    public Integer bookFacility(String facility, int noOfItemsToProcess) throws NegativeOrZeroParameterException, FacilityNotFoundException {
+        return bookFacility(facility, noOfItemsToProcess, 1);
+    }
+
+
+    /**
+     *  Updates schedule given a number of items to process and returns processing end day
+     */
+    public Integer bookFacility(String facilityName, int noOfItemsToProcess, int startDay) throws NegativeOrZeroParameterException, FacilityNotFoundException {
+        validateFacilityExists(facilityName);
+        Facility facility = facilityHashMap.get(facilityName);
+        return facility.bookFacility(noOfItemsToProcess, startDay);
+    }
+
+    private void validateFacilityExists(String name) throws FacilityNotFoundException {
+        if (!facilityHashMap.containsKey(name)){
+            throw new FacilityNotFoundException("Facility " + name + "not found");
+        }
     }
 }

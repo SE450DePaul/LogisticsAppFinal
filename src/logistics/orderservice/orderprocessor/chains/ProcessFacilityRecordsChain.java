@@ -45,9 +45,9 @@ public class ProcessFacilityRecordsChain extends ProcessChain {
     private void processFromFacility(FacilityRecord facilityRecord, int quantity) throws IllegalParameterException, FacilityNotFoundException {
         String facility = facilityRecord.getSource();
         int startTime = orderItemRequestDTO.startTime;
-        int processingEndDay = scheduleService.getProcessDaysNeeded(facility, quantity, startTime);
-        inventoryService.reduceFromInventory(facility, orderItemRequestDTO.itemId, quantity);
-        scheduleService.bookFacility(facility, quantity, startTime);
+        int processingEndDay = facilityService.getProcessDaysNeeded(facility, quantity, startTime);
+        facilityService.reduceFromInventory(facility, orderItemRequestDTO.itemId, quantity);
+        facilityService.bookFacility(facility, quantity, startTime);
         if (processingEndDay != facilityRecord.getProcessingEndDay()) {
             int arrivalDay = calculateArrivalDay(processingEndDay, facilityRecord.getTravelTime());
             facilityRecord.setProcessingEndDay(processingEndDay);

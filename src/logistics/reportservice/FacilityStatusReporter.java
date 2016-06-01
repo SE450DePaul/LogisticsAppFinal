@@ -3,6 +3,7 @@ package logistics.reportservice;
 import logistics.facilityservice.FacilityService;
 import logistics.networkservice.NetworkService;
 import logistics.reportservice.services.FacilityStatusService;
+import logistics.utilities.exceptions.FacilityNotFoundException;
 import logistics.utilities.exceptions.FacilityNotFoundInNetworkException;
 import logistics.utilities.exceptions.IllegalParameterException;
 
@@ -51,6 +52,8 @@ public final class FacilityStatusReporter implements Reporter {
             } catch (FacilityNotFoundInNetworkException e) {
                 e.printStackTrace();
             } catch (IllegalParameterException e) {
+                e.printStackTrace();
+            } catch (FacilityNotFoundException e) {
                 e.printStackTrace();
             }
         }

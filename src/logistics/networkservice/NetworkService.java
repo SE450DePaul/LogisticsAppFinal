@@ -104,7 +104,7 @@ public final class NetworkService {
                 }
 
             }
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         } catch (NullParameterException e) {
             e.printStackTrace();

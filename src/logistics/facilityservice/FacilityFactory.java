@@ -7,11 +7,11 @@ package logistics.facilityservice;
  * @author David Olorundare and Uchenna F.okoye
  */
 
-import logistics.utilities.exceptions.NullParameterException;
+import logistics.utilities.exceptions.IllegalParameterException;
 
 public class FacilityFactory 
 {
-    public static Facility build(String name, Integer rate, Double cost) throws NullParameterException
+    public static Facility build(String name, Integer rate, Double cost) throws IllegalParameterException
     {
         return new FacilityImpl(name, rate, cost);
     }

@@ -7,15 +7,15 @@ package logistics.scheduleservice;
  * @author Uchenna F.Okoye
  */
 
-import logistics.facilityservice.FacilityDTO;
-import logistics.utilities.exceptions.NullParameterException;
+import logistics.facilityservice.dtos.FacilityDTO;
+import logistics.utilities.exceptions.IllegalParameterException;
 
 public class ScheduleFactory
 {
 	/*
 	 * Returns a newly created Facility Schedule implementation.
 	 */
-    public static Schedule build(FacilityDTO facility) throws NullParameterException
+    public static Schedule build(FacilityDTO facility) throws IllegalParameterException
     {
         return new ScheduleImpl(facility);
     }

@@ -1,7 +1,7 @@
 package logistics.utilities.loader.interfaces;
 
 import logistics.networkservice.interfaces.FacilityVertex;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 
 import java.util.Collection;
 
@@ -10,5 +10,5 @@ import java.util.Collection;
  */
 public interface NetworkLoader extends Loader<FacilityVertex>
 {
-    Collection<FacilityVertex> load() throws LoaderFileNotFoundException;
+    Collection<FacilityVertex> load() throws LoaderConfigFilePathException;
 }

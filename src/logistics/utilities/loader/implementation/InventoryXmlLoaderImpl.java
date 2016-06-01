@@ -4,7 +4,7 @@ import logistics.inventoryservice.Inventory;
 import logistics.inventoryservice.InventoryFactory;
 import logistics.inventoryservice.dtos.InventoryItemDTO;
 import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.exceptions.NullParameterException;
 import logistics.utilities.loader.interfaces.InventoryLoader;
 import org.w3c.dom.Document;
@@ -40,7 +40,7 @@ public class InventoryXmlLoaderImpl implements InventoryLoader
 		filepath = path;
 	}
 
-	public ArrayList<Inventory> load() throws LoaderFileNotFoundException
+	public ArrayList<Inventory> load() throws LoaderConfigFilePathException
 	{
 
 
@@ -152,7 +152,7 @@ public class InventoryXmlLoaderImpl implements InventoryLoader
 		{
 			xmlLoader.load();
 		}
-		catch (LoaderFileNotFoundException e)
+		catch (LoaderConfigFilePathException e)
 		{
 			e.printStackTrace();
 		}

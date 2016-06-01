@@ -5,7 +5,7 @@ import logistics.networkservice.factory.FacilityVertexFactory;
 import logistics.networkservice.interfaces.FacilityVertex;
 import logistics.utilities.exceptions.NegativeOrZeroParameterException;
 import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.utilities.exceptions.NeighborNotFoundInNetworkException;
 import logistics.utilities.loader.factory.LoaderFactory;
 import logistics.utilities.loader.interfaces.Loader;
@@ -36,7 +36,7 @@ public class NetworkXmlLoaderImpl implements NetworkLoader {
 		filepath = networkFilepath;
 	}
 
-	public ArrayList<FacilityVertex> load() throws LoaderFileNotFoundException {
+	public ArrayList<FacilityVertex> load() throws LoaderConfigFilePathException {
 
 		ArrayList<FacilityVertex> facilityVertices = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class NetworkXmlLoaderImpl implements NetworkLoader {
 
 			File xml = new File(filepath);
 			if (!xml.exists()) {
-				throw new LoaderFileNotFoundException();
+				throw new LoaderConfigFilePathException();
 			}
 
 			Document doc = db.parse(xml);
@@ -136,7 +136,7 @@ public class NetworkXmlLoaderImpl implements NetworkLoader {
 
 			}
 
-		} catch (LoaderFileNotFoundException e) {
+		} catch (LoaderConfigFilePathException e) {
 			e.printStackTrace();
 		} catch (NeighborNotFoundInNetworkException e) {
 			e.printStackTrace();

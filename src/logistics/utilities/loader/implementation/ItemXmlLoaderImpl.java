@@ -2,7 +2,7 @@ package logistics.utilities.loader.implementation;
 
 
 import logistics.utilities.exceptions.NullParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.LoaderConfigFilePathException;
 import logistics.itemservice.Item;
 import logistics.itemservice.ItemFactory;
 import logistics.utilities.loader.interfaces.ItemLoader;
@@ -27,7 +27,7 @@ public class ItemXmlLoaderImpl implements ItemLoader {
         filepath = itemFilepath;
     }
 
-    public ArrayList<Item> load() throws LoaderFileNotFoundException {
+    public ArrayList<Item> load() throws LoaderConfigFilePathException {
 
         ArrayList<Item> items = new ArrayList<Item>();
 
@@ -37,7 +37,7 @@ public class ItemXmlLoaderImpl implements ItemLoader {
 
             File xml = new File(filepath);
             if (!xml.exists()) {
-                throw new LoaderFileNotFoundException();
+                throw new LoaderConfigFilePathException();
             }
 
             Document doc = db.parse(xml);
@@ -93,7 +93,7 @@ public class ItemXmlLoaderImpl implements ItemLoader {
         ItemXmlLoaderImpl xmlLoader =  new ItemXmlLoaderImpl("data/item_catalog.xml");
         try {
             xmlLoader.load();
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         }
 

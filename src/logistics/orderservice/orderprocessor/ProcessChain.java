@@ -1,11 +1,8 @@
 package logistics.orderservice.orderprocessor;
 
 import logistics.facilityservice.FacilityService;
-import logistics.inventoryservice.InventoryService;
 import logistics.itemservice.ItemCatalogService;
 import logistics.orderservice.facilityrecord.FacilityRecord;
-import logistics.orderservice.facilityrecord.FacilityRecordDTO;
-import logistics.scheduleservice.ScheduleService;
 import logistics.utilities.exceptions.*;
 
 import java.util.Collection;
@@ -17,8 +14,6 @@ public abstract class ProcessChain {
 
     private ProcessChain chain;
     protected Collection<FacilityRecord> facilityRecords;
-    protected InventoryService inventoryService = InventoryService.getInstance();
-    protected ScheduleService scheduleService = ScheduleService.getInstance();
     protected FacilityService facilityService = FacilityService.getInstance();
     protected ItemCatalogService itemCatalogService = ItemCatalogService.getInstance();
 

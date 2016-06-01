@@ -47,7 +47,7 @@ public final class OrderService {
                 orderSolutionComponentHashMap.put(orderRequestDTO.orderId, orderSolutionComponent);
             }
 
-        } catch (LoaderFileNotFoundException e) {
+        } catch (LoaderConfigFilePathException e) {
             e.printStackTrace();
         } catch (NeighborNotFoundInNetworkException e) {
             e.printStackTrace();
