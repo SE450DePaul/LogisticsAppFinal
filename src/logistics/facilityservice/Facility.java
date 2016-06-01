@@ -1,6 +1,6 @@
 package logistics.facilityservice;
 
-**
+/**
  * This is a Facility Interface which provides common behaviors 
  * every Facility Implementation should be able to perform.
  * 
