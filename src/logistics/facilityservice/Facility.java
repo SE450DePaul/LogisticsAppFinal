@@ -1,8 +1,8 @@
 package logistics.facilityservice;
 
-/**
- * This class represents a Facility Factory, which handles object creation 
- * of new Facility Implementation classes.
+**
+ * This is a Facility Interface which provides common behaviors 
+ * every Facility Implementation should be able to perform.
  * 
  * @author David Olorundare
  */
