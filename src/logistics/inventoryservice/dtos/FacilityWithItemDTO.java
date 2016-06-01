@@ -20,22 +20,4 @@ public class FacilityWithItemDTO {
         quantity = itemQuantity;
     }
 
-    public String toString() {
-        return name + " " + itemId + " " + quantity;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null) return false;
-        if (!(o instanceof FacilityWithItemDTO)) return false;
-
-        FacilityWithItemDTO facilityWithItemDTO = (FacilityWithItemDTO) o;
-
-        if (!name.equals(facilityWithItemDTO.name)) return false;
-        if (!itemId.equals(facilityWithItemDTO.itemId)) return false;
-        if (! (quantity == facilityWithItemDTO.quantity) ) return false;
-
-        return true;
-    }
-
 }
