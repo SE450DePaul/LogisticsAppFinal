@@ -7,7 +7,7 @@ package logistics.utilities.loader.interfaces;
  * @author David Olorundare
  */
 
-import logistics.orderservice.Order;
+import logistics.orderservice.order.Order;
 import logistics.utilities.exceptions.LoaderFileNotFoundException;
 import java.util.Collection;
 
