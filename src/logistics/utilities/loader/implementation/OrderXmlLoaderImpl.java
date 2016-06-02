@@ -1,16 +1,25 @@
 package logistics.utilities.loader.implementation;
 
+/**
+* This class represents the implementation of an Order XML Loader
+* which loads in XML data, containing details of various Orders, into
+* the Logistics application.
+*
+* @author David Olorundare
+*
+*/
 
-import logistics.orderservice.dtos.OrderItemRequestDTO;
-import logistics.orderservice.dtos.OrderRequestDTO;
-import logistics.orderservice.order.Order;
-import logistics.orderservice.order.OrderFactory;
-import logistics.utilities.exceptions.IllegalParameterException;
-import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.utilities.exceptions.NullParameterException;
+import logistics.utilities.loader.factory.LoaderFactory;
+import logistics.utilities.loader.interfaces.Loader;
 import logistics.utilities.loader.interfaces.OrderLoader;
+import logistics.utilities.exceptions.LoaderFileNotFoundException;
+import logistics.itemservice.Item;
+import logistics.itemservice.ItemFactory;
+import logistics.orderservice.Order;
+import logistics.orderservice.OrderFactory;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,113 +27,138 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by uchennafokoye on 4/22/16.
- */
-public class OrderXmlLoaderImpl implements OrderLoader {
+public class OrderXmlLoaderImpl implements OrderLoader
+{
+	private String orderStartDay;
+	private String orderId;
+	private String orderDestination;
+	private String itemId;
+	private Double itemQty;
+	private String itemQuantity;
+	private ArrayList<Item> orderItems;
+	private String filepath;
 
-    private String filepath;
-
-    public OrderXmlLoaderImpl(String itemFilepath){
-        filepath = itemFilepath;
+    /*
+	 * Takes as input the filesystem path to the XML data. 
+	 */
+    public OrderXmlLoaderImpl(String orderFilepath)
+    {
+        filepath = orderFilepath;
     }
+	
+    /*
+ 	 * Returns a list of Items loaded from the XML data.
+ 	 */
+    public ArrayList<Order> load() throws LoaderFileNotFoundException 
+    {
+    	ArrayList<Order> orderList = new ArrayList<Order>();
 
-    public ArrayList<Order> load() throws LoaderFileNotFoundException {
-
-        ArrayList<Order> orders = new ArrayList<>();
-
-        try {
+        try 
+        {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
 
             File xml = new File(filepath);
-            if (!xml.exists()) {
+            if (!xml.exists()) 
+            {
                 throw new LoaderFileNotFoundException();
             }
 
             Document doc = db.parse(xml);
             Element documentElement = doc.getDocumentElement();
             documentElement.normalize();
-
-            NodeList itemEntries = documentElement.getChildNodes();
-            for (int i = 0; i < itemEntries.getLength(); i++) {
-                Node node = itemEntries.item(i);
-                if (node.getNodeType() == Node.TEXT_NODE) {
+            
+            NodeList orderEntries = documentElement.getChildNodes();
+            for (int i = 0; i < orderEntries.getLength(); i++) 
+            {
+                Node node = orderEntries.item(i);
+                if (node.getNodeType() == Node.TEXT_NODE) 
+                {
                     continue;
                 }
 
                 String entryName = node.getNodeName();
-                if (!entryName.equals("order")) {
+                if (!entryName.equals("order")) 
+                {
                     continue;
-//                    Or perhaps throw an error
                 }
-
+                
                 NamedNodeMap attributes = node.getAttributes();
-                Node namedItem = attributes.getNamedItem("id");
-                String orderId = namedItem.getNodeValue();
-                Element element = (Element) itemEntries.item(i);
-                String destination = element.getElementsByTagName("destination").item(0).getTextContent();
-                String orderDayString = element.getElementsByTagName("day").item(0).getTextContent();
-                int orderDay = Integer.parseInt(orderDayString);
+                Node orderName = attributes.getNamedItem("id");
+                orderId = orderName.getNodeValue();
+                
+                Element element = (Element) orderEntries.item(i);
+                NodeList timeNode = element.getElementsByTagName("time");
+                orderStartDay = timeNode.item(0).getTextContent();
+                
+                NodeList destinationNode = element.getElementsByTagName("destination");
+                orderDestination = destinationNode.item(0).getTextContent();
+                
+                orderItems = new ArrayList<Item>();
+                NodeList itemList = element.getElementsByTagName("item");
+                
+				for (int j = 0; j < itemList.getLength(); j++)
+				{
+					if (itemList.item(j).getNodeType() == Node.TEXT_NODE)
+					{
+						continue;
+					}
 
-                NodeList itemNodes = element.getElementsByTagName("item");
+					entryName = itemList.item(j).getNodeName();
+					if (!entryName.equals("item"))
+					{
+						System.err.println("Unexpected node found: " + entryName);
 
-                Order order;
-                ArrayList<OrderItemRequestDTO> collection = new ArrayList<>();
+					}
 
-                for (int j = 0; j < itemNodes.getLength(); j++){
-
-                    node = itemNodes.item(j);
-                    if (node.getNodeType() == Node.TEXT_NODE){
-                        continue;
-                    }
-
-                    entryName = node.getNodeName();
-                    if (!entryName.equals("item")){
-                        continue;
-                    }
-
-                    element = (Element) itemNodes.item(j);
-                    String itemId = element.getElementsByTagName("id").item(0).getTextContent();
-                    String quantityString = element.getElementsByTagName("quantity").item(0).getTextContent();
-                    int quantity = Integer.parseInt(quantityString);
-                    collection.add(new OrderItemRequestDTO(destination, itemId, orderDay, quantity));
-
-                }
-
-                OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, destination, orderDay, collection);
-                order = OrderFactory.build(orderRequestDTO);
-                orders.add(order);
+					element = (Element) itemList.item(j);
+					itemId = element.getElementsByTagName("id").item(0).getTextContent();
+					itemQuantity = element.getElementsByTagName("quantity").item(0).getTextContent();
+					itemQty = Double.parseDouble(itemQuantity);
+					
+					Item item = ItemFactory.build(itemId, itemQty);
+					orderItems.add(item);
+				}
+				
+				Order orders = OrderFactory.build(orderId, orderDestination, orderStartDay, orderItems);
+				
+				// Must be uncommented if this class is to be run from its main() method.
+				//System.out.println("Order Id: " + orderId + "  Destination: " + orderDestination + "  Start Day: " + orderStartDay);
+				
+				orderList.add(orders);	
             }
-
-
-
-
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e) 
+        {
             e.printStackTrace();
-        } catch (SAXException e) {
+        } 
+        catch (SAXException e) 
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             e.printStackTrace();
-        } catch (IllegalParameterException e) {
+        } 
+        catch (NullParameterException e) 
+        {
             e.printStackTrace();
         }
 
-
-        return orders;
+        return orderList;
     }
-
-
-
-    public static void main(String[] args){
-
-        OrderXmlLoaderImpl xmlLoader =  new OrderXmlLoaderImpl("data/orders.xml");
-        try {
+    
+    // Test that the class works.
+    public static void main(String[] args)
+    {
+    	Loader xmlLoader = LoaderFactory.build("order"); 
+        try 
+        {
             xmlLoader.load();
-        } catch (LoaderFileNotFoundException e) {
+        } 
+        catch (LoaderFileNotFoundException e) 
+        {
             e.printStackTrace();
         }
-
-
     }
 }

@@ -12,7 +12,7 @@ public class ItemDTO {
     public String id;
     public Double price;
     
-    /*
+    /**
      * Constructor that creates a new ItemDTO given
      * an item's ID and price.
      */

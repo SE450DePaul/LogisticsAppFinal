@@ -29,7 +29,7 @@ public class InventoryImpl implements Inventory
 		depletedItemHash = new HashMap<>();
 	}
 
-	/*
+	/**
 	 * Helper method that sets a Facility's Name.
 	 */
 	private void setFacilityName(String nameOfFacility) throws NullParameterException {
@@ -44,7 +44,7 @@ public class InventoryImpl implements Inventory
 		updateInventoryHelper(itemId, quantityAvailable);
 	}
 
-	/*
+	/**
 	 * Adds a new Item to a Facility's Inventory given
 	 * an item ID and quantity.
 	 */
@@ -54,7 +54,7 @@ public class InventoryImpl implements Inventory
 		updateInventoryHelper(itemId, quantity);
 	}
 
-	/*
+	/**
 	 * Helper method that returns a Facility Inventory's item quantity
 	 * given an item ID.
 	 */
@@ -62,14 +62,14 @@ public class InventoryImpl implements Inventory
 		return activeItemHash.get(itemId);
 	}
 
-	/*
+	/**
 	 * Helper method that returns a Facility's Name.
 	 */
 	public String getFacilityName() {
 		return facilityName;
 	}
 
-	/*
+	/**
 	 * Displays the Active Inventory details of a Facility,
 	 * showing the Items currently present in the inventory, 
 	 * its Quantity, as well as the total quantity of Items
@@ -108,7 +108,7 @@ public class InventoryImpl implements Inventory
 		return stringBuffer.toString();
 	}
 
-	/*
+	/**
 	 * Updates the Active Inventory of a Facility with a given Item and its Quantity.
 	 */
 	private void updateInventoryHelper(String itemId, int quantity) {
@@ -137,7 +137,7 @@ public class InventoryImpl implements Inventory
 
 	}
 
-	/*
+	/**
 	 * Validates that a Facility's name is not Null.
 	 */
 	private void validateFacility(String facilityName) throws NullParameterException {
@@ -146,7 +146,7 @@ public class InventoryImpl implements Inventory
 		}
 	}
 
-	/*
+	/**
 	 * Validates that a Facility's inventory quantity is not less than zero.
 	 */
 	private void validateQuantity(int quantity) throws NullParameterException {
@@ -155,7 +155,7 @@ public class InventoryImpl implements Inventory
 		}
 	}
 
-	/*
+	/**
 	 * Validates that a Facility's inventory-item name is not Null.
 	 */
 	private void validateItem(String itemId) throws IllegalParameterException {

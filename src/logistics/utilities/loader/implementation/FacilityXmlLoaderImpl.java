@@ -93,7 +93,9 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	        catch (IOException e) 
 	        {
 	            e.printStackTrace();
-	        } catch (NullParameterException e) {
+	        } 
+	        catch (NullParameterException e) 
+	        {
 				e.printStackTrace();
 			}
 
@@ -101,14 +103,15 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 	    }
 
 
-
-	    public static void main(String[] args){
-
+	    public static void main(String[] args)
+	    {
 	        FacilityXmlLoaderImpl xmlLoader =  new FacilityXmlLoaderImpl("data/facilities.xml");
 			ArrayList<Facility> facilities;
-			try {
+			try 
+			{
 				facilities = xmlLoader.load();
-				for (Facility f : facilities){
+				for (Facility f : facilities)
+				{
 
 					System.out.println(f.getName());
 					System.out.println("Cost: " + f.getCost());
@@ -116,9 +119,10 @@ public class FacilityXmlLoaderImpl implements FacilityLoader
 					System.out.println("");
 
 				}
-			} catch (LoaderFileNotFoundException e) {
+			} 
+			catch (LoaderFileNotFoundException e) 
+			{
 				e.printStackTrace();
 			}
 	    }
-
 }

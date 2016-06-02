@@ -10,7 +10,7 @@ import logistics.utilities.exceptions.NullParameterException;
 
 public class ItemFactory {
 
-	/*
+	/**
 	 * Returns a newly created item object given
 	 * an item ID and price.
 	 */

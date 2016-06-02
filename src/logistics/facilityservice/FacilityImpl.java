@@ -21,14 +21,14 @@ public class FacilityImpl implements Facility
         setCost(cost);
     }
 
-    /*
+    /**
      * Helper method returns a Facility's Name.
      */
 	public String getName() {
 		return name;
 	}
 
-	/*
+	/**
 	 * Helper method that returns a Facility's Rate.
 	 */
 	public Integer getRate()
@@ -36,7 +36,7 @@ public class FacilityImpl implements Facility
 		return rate;
 	}
 
-	/*
+	/**
 	 * Helper method that returns to a Facility's Cost.
 	 */
 	public Double getCost()
@@ -44,7 +44,7 @@ public class FacilityImpl implements Facility
 		return cost;
 	}
 
-	/*
+	/**
 	 * Helper method used to assembly a Facility's Name, Rate, and Cost, for output.
 	 */
 	public String toString() {
@@ -59,7 +59,7 @@ public class FacilityImpl implements Facility
 		return stringBuffer.toString();
 	}
 
-	/*
+	/**
 	 * Helper method used to set a Facility's Name.
 	 */
 	private void setName(String facilityName) throws NullParameterException
@@ -68,7 +68,7 @@ public class FacilityImpl implements Facility
 		name = facilityName;
 	}
 
-	/*
+	/**
 	 * Helper method used to set a Facility's Rate.
 	 */
 	private void setRate(Integer facilityRate) throws NullParameterException
@@ -77,7 +77,7 @@ public class FacilityImpl implements Facility
 		rate = facilityRate;
 	}
 
-	/*
+	/**
 	 * Helper method used to set a Facility's Cost.
 	 */
 	private void setCost(Double facilityCost) throws NullParameterException
@@ -86,7 +86,7 @@ public class FacilityImpl implements Facility
 		cost = facilityCost;
 	}
 
-	/*
+	/**
 	 * Validates that a given Facility's Name is not Null.
 	 */
 	private void validateName(String name) throws NullParameterException {
@@ -95,7 +95,7 @@ public class FacilityImpl implements Facility
 		}
 	}
 
-	/*
+	/**
 	 * Validates that a given Facility's Rate is not Null.
 	 */
 	private void validateRate(Integer rate) throws NullParameterException {
@@ -104,7 +104,7 @@ public class FacilityImpl implements Facility
 		}
 	}
 	
-	/*
+	/**
 	 * Validates that a given Facility's Cost is not Null.
 	 */
 	private void validateCost(Double cost) throws NullParameterException {
@@ -113,7 +113,7 @@ public class FacilityImpl implements Facility
 		}
 	}
 	
-	/*
+	/**
 	 * Helper method that is used to generate dashed lines.
 	 */
 	private String generateDashedLine(int length) {

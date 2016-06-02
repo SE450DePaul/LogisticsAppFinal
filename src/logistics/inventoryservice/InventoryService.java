@@ -40,7 +40,7 @@ public final class InventoryService
         }
     }
     
-    /*
+    /**
      * Returns an instance of the Inventory Service 
      */
     public static InventoryService getInstance() {
@@ -57,7 +57,7 @@ public final class InventoryService
         return instance;
     }
     
-    /*
+    /**
      * Returns an Inventory Item's information given a Facility
      * and the Item being sort for. 
      */
@@ -77,7 +77,7 @@ public final class InventoryService
         return true;
     }
 
-    /*
+    /**
      * Returns FacilitiesWithItemDTO
      * which provides a list of all the facilities with an item and the quantity
      */
@@ -97,7 +97,7 @@ public final class InventoryService
         return facilityWithItemDTOs;
     }
 
-    /*
+    /**
      * Returns the Inventory of a given Facility.
      */
     public String getOutput(String facilityName){

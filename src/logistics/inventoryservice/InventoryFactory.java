@@ -11,7 +11,7 @@ import logistics.utilities.exceptions.NullParameterException;
 
 public class InventoryFactory
 {
-    /*
+    /**
      * Returns a newly created Facility Inventory given a Facility name.
      */
 	public static Inventory build(String facilityName) throws NullParameterException 

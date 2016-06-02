@@ -18,7 +18,7 @@ public class ItemImpl implements Item
     private String id;
     private Double price;
     
-    /*
+    /**
      * Constructor that creates a new Item given
      * an item ID and price.
      */
@@ -27,21 +27,21 @@ public class ItemImpl implements Item
         setPrice(price);
     }
     
-    /*
+    /**
      * Helper method that returns an Item's ID
      */
     public String getId() {
         return id;
     }
     
-    /*
+    /**
      * Helper method that returns an Item's price.
      */
     public Double getPrice() {
         return price;
     }
 
-   /*
+   /**
     * Helper method that is used for displaying
     * an Item's information.
     */
@@ -54,7 +54,7 @@ public class ItemImpl implements Item
         return stringBuffer.toString();
     }
 
-    /*
+    /**
      * Helper method that sets an Item's name.
      */
     private void setId(String itemId) throws NullParameterException {
@@ -62,7 +62,7 @@ public class ItemImpl implements Item
         id = itemId;
     }
     
-    /*
+    /**
      * Helper method that sets an Item's price.
      */
     private void setPrice(Double itemPrice) throws NullParameterException {
@@ -70,7 +70,7 @@ public class ItemImpl implements Item
         price = itemPrice;
     }
 
-    /*
+    /**
      * Validates that an Item's name is not Empty or Null.
      */
     private void validateId(String id) throws NullParameterException {
@@ -79,7 +79,7 @@ public class ItemImpl implements Item
         }
     }
 
-    /*
+    /**
      * Validates that an Item's price is not Null.
      */
     private void validatePrice(Double price) throws NullParameterException {

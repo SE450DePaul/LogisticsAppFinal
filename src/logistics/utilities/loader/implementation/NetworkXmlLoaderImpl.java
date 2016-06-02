@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by uchennafokoye on 4/22/16.
+ * @author Uchenna F. Okoye
  */
 public class NetworkXmlLoaderImpl implements NetworkLoader {
 

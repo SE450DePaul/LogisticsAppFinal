@@ -35,7 +35,7 @@ public final class ItemCatalogService {
             }
     }
     
-    /*
+    /**
      * Returns an instance of the Item Catalog service.
      */
     public static ItemCatalogService getInstance() {
@@ -50,7 +50,7 @@ public final class ItemCatalogService {
         return instance;
     }
     
-    /*
+    /**
      * Returns information about all Items in the Facilities.
      */
     public String getOutput(){
@@ -70,7 +70,7 @@ public final class ItemCatalogService {
         return stringBuffer.toString();
     }
 
-    /*
+    /**
      * Returns an ItemDTO given an item's name.
      */
     public ItemDTO getItem(String itemId){
